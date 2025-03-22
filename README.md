@@ -1,29 +1,59 @@
-# areal-hr-test-2025
+## Используемый стек технологий
 
-This template should help get you started developing with Vue 3 in Vite.
+- **Frontend**: Vue.js 3.5
+- **Backend**: NestJS 10
+- **База данных**: PostgreSQL 16
 
-## Recommended IDE Setup
+## Окружение для разработки
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- **Операционная система**: Windows 10
+- **Среда разработки (IDE)**: IntelliJ IDEA
+- **База данных**: PostgreSQL 16 установлена локально на ноутбуке
 
-## Customize configuration
+## Основные команды Git
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
+- **Инициализация репозитория**:
+  ```sh
+  git init
+  ```
+- **Клонирование репозитория**:
+  ```sh
+  git clone <URL-репозитория>
+  ```
+- **Добавление файлов в индекс**:
+  ```sh
+  git add <имя_файла>  # Добавить конкретный файл
+  git add .  # Добавить все файлы
+  ```
+- **Создание коммита**:
+  ```sh
+  git commit -m "Сообщение коммита"
+  ```
+- **Просмотр состояния репозитория**:
+  ```sh
+  git status
+  ```
+- **Просмотр истории коммитов**:
+  ```sh
+  git log
+  ```
+- **Отправка изменений в удалённый репозиторий**:
+  ```sh
+  git push origin <ветка>
+  ```
+- **Получение изменений из удалённого репозитория**:
+  ```sh
+  git pull origin <ветка>
+  ```
+- **Создание новой ветки**:
+  ```sh
+  git branch <имя_ветки>
+  ```
+- **Переключение между ветками**:
+  ```sh
+  git checkout <имя_ветки>
+  ```
+- **Объединение веток**:
+  ```sh
+  git merge <имя_ветки>
+  ```
