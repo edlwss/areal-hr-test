@@ -4,12 +4,17 @@
   "description": "Description of your project",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "migrate": "npx node-pg-migrate up",
+    "migrate-down": "npx node-pg-migrate down"
   },
+
   "dependencies": {
-    "express": "^4.17.1"
+    "dotenv": "^16.4.7",
+    "express": "^4.17.1",
+    "pg": "^8.14.1",
+    "sequelize": "^6.37.6"
   },
-  "devDependencies": {},
   "keywords": [],
   "author": "itche",
   "license": "ISC"
