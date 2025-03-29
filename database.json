@@ -1,4 +1,0 @@
-{
-  "migrationFolder": "./migrations",
-  "databaseUrl": "postgres://postgres:2904@localhost:5432/hr"
-}
