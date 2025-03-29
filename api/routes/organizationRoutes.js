@@ -1,32 +1,56 @@
 const express = require('express');
-const pool = require('../db');
+const OrganizationService = require('../services/organizationService');
 
 const router = express.Router();
 
-// // Получение всех организаций
-// router.get('/organizations', async (req, res) => {
-//     try {
-//         const result = await pool.query('SELECT * FROM organizations');
-//         res.json(result.rows);
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ error: 'Database error' });
-//     }
-// });
-//
-// // Добавление организации
-// router.post('/organizations', async (req, res) => {
-//     const { name } = req.body;
-//     try {
-//         const result = await pool.query(
-//             'INSERT INTO organizations (name) VALUES ($1) RETURNING *',
-//             [name]
-//         );
-//         res.json(result.rows[0]);
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ error: 'Database error' });
-//     }
-// });
+router.post('/organizations', async (req, res) => {
+    try {
+        const { name, comment } = req.body;
+        const organization = await OrganizationService.createOrganization(name, comment);
+        res.status(201).json(organization);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.get('/organizations', async (req, res) => {
+    try {
+        const organizations = await OrganizationService.getAllOrganizations();
+        res.status(200).json(organizations);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.get('/organizations/:id', async (req, res) => {
+    try {
+        const organization = await OrganizationService.getOrganizationById(req.params.id);
+        if (!organization) return res.status(404).json({ error: 'Organization not found' });
+        res.status(200).json(organization);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.put('/organizations/:id', async (req, res) => {
+    try {
+        const { name, comment } = req.body;
+        const updatedOrganization = await OrganizationService.updateOrganization(req.params.id, name, comment);
+        if (!updatedOrganization) return res.status(404).json({ error: 'Organization not found' });
+        res.status(200).json(updatedOrganization);
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+router.delete('/organizations/:id', async (req, res) => {
+    try {
+        const deletedOrganization = await OrganizationService.deleteOrganization(req.params.id);
+        if (!deletedOrganization) return res.status(404).json({ error: 'Organization not found' });
+        res.status(200).json({ message: 'Organization deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 module.exports = router;
