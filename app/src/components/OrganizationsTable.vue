@@ -20,8 +20,6 @@
         </td>
         <td>{{ org.comment }}</td>
         <td class="actions">
-          <router-link :to="`/organization/${org.OrganizationID}`" class="btn btn-view">Просмотр</router-link>
-          <router-link :to="`/organization/${org.OrganizationID}/edit`" class="btn btn-edit">Редактировать</router-link>
           <button @click="deleteOrganization(org.OrganizationID)" class="btn btn-delete">Удалить</button>
         </td>
       </tr>

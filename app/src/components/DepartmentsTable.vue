@@ -5,15 +5,20 @@
     <table class="table">
       <thead>
       <tr>
+        <th>Название</th>
         <th>Организация</th>
         <th>Родительский департамент</th>
-        <th>Название</th>
         <th>Комментарий</th>
         <th></th>
       </tr>
       </thead>
       <tbody>
       <tr v-for="dept in departments" :key="dept.DepartmentID">
+        <td>
+          <router-link :to="`/department/${dept.DepartmentID}`" class="link">
+            {{ dept.name }}
+          </router-link>
+        </td>
         <td>
           <router-link v-if="organizations[dept.organization_ID]" :to="'/organization/' + dept.organization_ID" class="link">
             {{ organizations[dept.organization_ID] }}
@@ -26,11 +31,9 @@
           </router-link>
           <span v-else>—</span>
         </td>
-        <td>{{ dept.name }}</td>
+
         <td>{{ dept.comment }}</td>
         <td class="actions">
-          <router-link :to="'/department/' + dept.DepartmentID" class="btn btn-view">Просмотр</router-link>
-          <router-link :to="'/department/' + dept.DepartmentID + '/edit'" class="btn btn-edit">Редактировать</router-link>
           <button @click="deleteDepartment(dept.DepartmentID)" class="btn btn-delete">Удалить</button>
         </td>
       </tr>

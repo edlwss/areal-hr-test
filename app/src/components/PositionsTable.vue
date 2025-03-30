@@ -18,7 +18,6 @@
           </router-link>
         </td>
         <td class="actions">
-          <router-link :to="`/position/${position.PositionID}`" class="btn btn-view">Просмотр</router-link>
           <button @click="deletePosition(position.PositionID)" class="btn btn-delete">Удалить</button>
         </td>
       </tr>
