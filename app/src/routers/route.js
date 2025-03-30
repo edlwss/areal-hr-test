@@ -8,6 +8,10 @@ import OrganizationsTable from '../components/OrganizationsTable.vue';
 import OrganizationDetails from '../components/OrganizationDetails.vue';
 import EditOrganization from '../components/EditOrganization.vue';
 import CreateOrganization from '../components/CreateOrganization.vue';
+import PositionsTable from "../components/PositionsTable.vue";
+import PositionDetails from "../components/PositionDetails.vue";
+import CreatePosition from "../components/CreatePosition.vue";
+import EditPosition from "../components/EditPosition.vue";
 
 const routes = [
     { path: '/', component: Home },
@@ -18,7 +22,11 @@ const routes = [
     { path: '/departments', component: DepartmentsTable },
     { path: '/department/:id', component: DepartmentDetails },
     { path: '/department/:id/edit', component: EditDepartment },
-    { path: '/department/new', component: CreateDepartment }
+    { path: '/department/new', component: CreateDepartment },
+    { path: '/positions', component: PositionsTable },
+    { path: '/position/:id', component: PositionDetails },
+    { path: '/position/:id/edit', component: EditPosition },
+    { path: '/position/new', component: CreatePosition }
 ];
 
 const router = createRouter({
