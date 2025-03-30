@@ -5,12 +5,15 @@ const pool = require('./db');
 const organizationRoutes = require('./routes/organizationRoutes');
 const positionRoutes = require('./routes/positionsRoutes');
 const departmentRoutes = require('./routes/departmentRoutes')
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 app.use('/api', organizationRoutes);
 app.use('/api', positionRoutes);
 app.use('/api', departmentRoutes);
+
 
 const PORT = process.env.PORT;
 const startServer = async () => {

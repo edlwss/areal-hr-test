@@ -2,7 +2,7 @@ const pool = require('../db');
 
 class DepartmentService {
     async createDepartment(organization_ID, parent_ID, name, comment) {
-        const query = `INSERT INTO departments (organization_ID, parent_ID, name, comment) VALUES ($1, $2, $3, $4) RETURNING *`;
+        const query = `INSERT INTO departments ("organization_ID", "parent_ID", name, comment) VALUES ($1, $2, $3, $4) RETURNING *`;
         const { rows } = await pool.query(query, [organization_ID, parent_ID, name, comment]);
         return rows[0];
     }

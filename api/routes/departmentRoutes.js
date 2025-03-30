@@ -9,6 +9,7 @@ departmentRouter.post('/departments', async (req, res) => {
         const department = await DepartmentService.createDepartment(organization_ID, parent_ID, name, comment);
         res.status(201).json(department);
     } catch (error) {
+        console.log(error)
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
@@ -18,6 +19,7 @@ departmentRouter.get('/departments', async (req, res) => {
         const departments = await DepartmentService.getAllDepartments();
         res.status(200).json(departments);
     } catch (error) {
+        console.log(error)
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
