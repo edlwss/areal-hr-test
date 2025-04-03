@@ -1,32 +1,26 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../components/Home.vue';
-import DepartmentsTable from '../components/DepartmentsTable.vue';
-import DepartmentDetails from '../components/DepartmentDetails.vue';
-import EditDepartment from '../components/EditDepartment.vue';
-import CreateDepartment from '../components/CreateDepartment.vue';
-import OrganizationsTable from '../components/OrganizationsTable.vue';
-import OrganizationDetails from '../components/OrganizationDetails.vue';
-import EditOrganization from '../components/EditOrganization.vue';
-import CreateOrganization from '../components/CreateOrganization.vue';
-import PositionsTable from "../components/PositionsTable.vue";
-import PositionDetails from "../components/PositionDetails.vue";
-import CreatePosition from "../components/CreatePosition.vue";
-import EditPosition from "../components/EditPosition.vue";
+import DepartmentsPage from '@/pages/DepartmentsPage.vue';
+import OrganizationsPage from "@/pages/OrganizationsPage.vue";
+import PositionsPage from "@/pages/PositionsPage.vue";
 
 const routes = [
     { path: '/', component: Home },
-    { path: '/organizations', component: OrganizationsTable },
-    { path: '/organization/:id', component: OrganizationDetails },
-    { path: '/organization/:id/edit', component: EditOrganization },
-    { path: '/organization/new', component: CreateOrganization },
-    { path: '/departments', component: DepartmentsTable },
-    { path: '/department/:id', component: DepartmentDetails },
-    { path: '/department/:id/edit', component: EditDepartment },
-    { path: '/department/new', component: CreateDepartment },
-    { path: '/positions', component: PositionsTable },
-    { path: '/position/:id', component: PositionDetails },
-    { path: '/position/:id/edit', component: EditPosition },
-    { path: '/position/new', component: CreatePosition }
+
+    { path: '/organizations', component: OrganizationsPage, name: 'organizations', meta: { title: 'Список организаций', component: 'OrganizationsTable' } },
+    { path: '/organization/:id', component: OrganizationsPage, name: 'organization-details', meta: { title: 'Детали организации', component: 'OrganizationDetails' } },
+    { path: '/organization/new', component: OrganizationsPage, name: 'organization-create', meta: { title: 'Создание организации', component: 'CreateOrganization' } },
+    { path: '/organization/:id/edit', component: OrganizationsPage, name: 'organization-edit', meta: { title: 'Редактирование организации', component: 'EditOrganization' } },
+
+    { path: '/positions', component: PositionsPage, name: 'positions', meta: { title: 'Список должностей', component: 'PositionsTable' } },
+    { path: '/position/:id', component: PositionsPage, name: 'position-details', meta: { title: 'Детали должности', component: 'PositionDetails' } },
+    { path: '/position/new', component: PositionsPage, name: 'position-create', meta: { title: 'Создание должности', component: 'CreatePosition' } },
+    { path: '/position/:id/edit', component: PositionsPage, name: 'position-edit', meta: { title: 'Редактирование должности', component: 'EditPosition' }},
+
+    { path: '/departments', component: DepartmentsPage, name: 'departments', meta: { component: 'DepartmentsTable', title: 'Список департаментов' } },
+    { path: '/department/:id', component: DepartmentsPage, name: 'department-details', meta: { component: 'DepartmentDetails', title: 'Детали департамента' } },
+    { path: '/department/new', component: DepartmentsPage, name: 'department-create', meta: { component: 'CreateDepartment', title: 'Создание департамента' } },
+    { path: '/department/:id/edit', component: DepartmentsPage, name: 'department-edit', meta: { component: 'EditDepartment', title: 'Редактирование департамента' } }
 ];
 
 const router = createRouter({
