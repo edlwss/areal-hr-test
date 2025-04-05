@@ -23,7 +23,7 @@
           <router-link v-if="organizations[dept.organization_ID]" :to="'/organization/' + dept.organization_ID" class="link">
             {{ organizations[dept.organization_ID] }}
           </router-link>
-          <span v-else>Загрузка...</span>
+          <span v-else>—</span>
         </td>
         <td>
           <router-link v-if="dept.parent_ID && parentDepartments[dept.parent_ID]" :to="'/department/' + dept.parent_ID" class="link">
@@ -34,7 +34,7 @@
 
         <td>{{ dept.comment }}</td>
         <td class="actions">
-          <button @click="deleteDepartment(dept.DepartmentID)" class="btn btn-delete">Удалить</button>
+          <button @click="remove(dept.DepartmentID)" class="btn btn-delete">Удалить</button>
         </td>
       </tr>
       </tbody>
@@ -43,50 +43,59 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { getDepartments, deleteDepartment } from '@/api/departmentsApi';
+import { getOrganizations } from '@/api/organizationsApi';
 
 export default {
-  data() {
-    return {
-      departments: [],
-      organizations: {},
-      parentDepartments: {},
-    };
-  },
-  async mounted() {
-    try {
-      const [departmentsResponse, organizationsResponse] = await Promise.all([
-        axios.get('http://localhost:3010/api/departments'),
-        axios.get('http://localhost:3010/api/organizations'),
-      ]);
+  setup() {
+    const departments = ref([]);
+    const organizations = ref({});
+    const parentDepartments = ref({});
 
-      this.departments = departmentsResponse.data;
-      this.organizations = organizationsResponse.data.reduce((acc, org) => {
-        acc[org.OrganizationID] = org.name;
-        return acc;
-      }, {});
+    onMounted(async () => {
+      try {
+        const [deptRes, orgRes] = await Promise.all([
+          getDepartments(),
+          getOrganizations()
+        ]);
 
-      this.parentDepartments = this.departments.reduce((acc, dept) => {
-        if (dept.parent_ID) {
-          acc[dept.parent_ID] = this.departments.find(d => d.DepartmentID === dept.parent_ID)?.name || '—';
-        }
-        return acc;
-      }, {});
+        departments.value = deptRes.data;
+        organizations.value = orgRes.data.reduce((acc, org) => {
+          acc[org.OrganizationID] = org.name;
+          return acc;
+        }, {});
 
-    } catch (error) {
-      console.error('Ошибка при загрузке данных:', error);
-    }
-  },
-  methods: {
-    async deleteDepartment(id) {
-      if (confirm('Вы уверены, что хотите удалить департамент?')) {
-        await axios.delete(`http://localhost:3010/api/departments/${id}`);
-        this.departments = this.departments.filter(dept => dept.DepartmentID !== id);
+        parentDepartments.value = deptRes.data.reduce((acc, dept) => {
+          if (dept.parent_ID) {
+            const parent = deptRes.data.find(d => d.DepartmentID === dept.parent_ID);
+            acc[dept.parent_ID] = parent?.name || '—';
+          }
+          return acc;
+        }, {});
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
       }
-    }
+    });
+
+    const remove = async (id) => {
+      if (confirm('Вы уверены, что хотите удалить департамент?')) {
+        await deleteDepartment(id);
+        departments.value = departments.value.filter(d => d.DepartmentID !== id);
+      }
+    };
+
+    return {
+      departments,
+      organizations,
+      parentDepartments,
+      remove
+    };
   }
 };
 </script>
+
+
 
 <style scoped>
 .container {
@@ -134,16 +143,6 @@ export default {
   text-decoration: none;
   text-align: center;
   display: inline-block;
-}
-
-.btn-view {
-  background: #2b5179;
-  color: white;
-}
-
-.btn-edit {
-  background: #2b5179;
-  color: white;
 }
 
 .btn-delete {

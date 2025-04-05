@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2 class="text-2xl font-bold mb-4 text-center">Создание новой позиции</h2>
-    <form @submit.prevent="createPosition">
+    <form @submit.prevent="submit">
       <label>Название:</label>
       <input v-model="position.name" required />
       <button type="submit" class="btn btn-save">Создать</button>
@@ -10,23 +10,28 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { createPosition } from '@/api/positionsApi';
 
 export default {
-  data() {
-    return {
-      position: { name: '' }
-    };
-  },
-  methods: {
-    async createPosition() {
+  setup() {
+    const position = ref({ name: '' });
+    const router = useRouter();
+
+    const submit = async () => {
       try {
-        await axios.post('http://localhost:3010/api/positions', this.position);
-        this.$router.push('/positions');
+        await createPosition(position.value);
+        await router.push('/positions');
       } catch (error) {
         console.error('Ошибка при создании позиции:', error);
       }
-    }
+    };
+
+    return {
+      position,
+      submit
+    };
   }
 };
 </script>

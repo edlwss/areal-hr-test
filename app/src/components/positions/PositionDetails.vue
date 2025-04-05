@@ -7,21 +7,27 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { getPositionById } from '@/api/positionsApi';
 
 export default {
-  data() {
+  setup() {
+    const position = ref({});
+    const route = useRoute();
+
+    onMounted(async () => {
+      try {
+        const response = await getPositionById(route.params.id);
+        position.value = response.data;
+      } catch (error) {
+        console.error('Ошибка при загрузке позиции:', error);
+      }
+    });
+
     return {
-      position: {}
+      position
     };
-  },
-  async mounted() {
-    try {
-      const response = await axios.get(`http://localhost:3010/api/positions/${this.$route.params.id}`);
-      this.position = response.data;
-    } catch (error) {
-      console.error('Ошибка при загрузке позиции:', error);
-    }
   }
 };
 </script>

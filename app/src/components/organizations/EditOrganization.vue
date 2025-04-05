@@ -14,34 +14,39 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { getOrganizationById, updateOrganization as apiUpdateOrganization } from '@/api/organizationsApi';
 
 export default {
-  data() {
-    return { organization: { name: '', comment: '' } };
-  },
-  async mounted() {
+  setup() {
+    const organization = ref({ name: '', comment: '' });
     const route = useRoute();
-    try {
-      const response = await axios.get(`http://localhost:3010/api/organizations/${route.params.id}`);
-      this.organization = response.data;
-    } catch (error) {
-      console.error('Ошибка загрузки:', error);
-    }
-  },
-  methods: {
-    async updateOrganization() {
+    const router = useRouter();
+
+    onMounted(async () => {
       try {
-        await axios.put(`http://localhost:3010/api/organizations/${this.organization.OrganizationID}`, this.organization);
-        this.$router.push(`/organizations`);
+        const response = await getOrganizationById(route.params.id);
+        organization.value = response.data;
+      } catch (error) {
+        console.error('Ошибка загрузки:', error);
+      }
+    });
+
+    const updateOrganization = async () => {
+      try {
+        await apiUpdateOrganization(route.params.id, organization.value);
+        await router.push('/organizations');
       } catch (error) {
         console.error('Ошибка обновления:', error);
       }
-    }
+    };
+
+    return { organization, updateOrganization };
   }
 };
 </script>
+
 
 <style scoped>
 .form-container {

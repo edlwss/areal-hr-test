@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { getOrganizations, deleteOrganization } from '@/api/organizationsApi';
 
 export default {
   data() {
@@ -39,7 +39,7 @@ export default {
   },
   async mounted() {
     try {
-      const response = await axios.get('http://localhost:3010/api/organizations');
+      const response = await getOrganizations();
       this.organizations = response.data;
     } catch (error) {
       console.error('Ошибка при загрузке организаций:', error);
@@ -49,7 +49,7 @@ export default {
     async deleteOrganization(id) {
       if (confirm('Вы уверены, что хотите удалить эту организацию?')) {
         try {
-          await axios.delete(`http://localhost:3010/api/organizations/${id}`);
+          await deleteOrganization(id);
           this.organizations = this.organizations.filter(org => org.OrganizationID !== id);
         } catch (error) {
           console.error('Ошибка при удалении организации:', error);
@@ -59,6 +59,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 .container {

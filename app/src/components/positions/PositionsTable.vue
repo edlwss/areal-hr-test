@@ -18,7 +18,7 @@
           </router-link>
         </td>
         <td class="actions">
-          <button @click="deletePosition(position.PositionID)" class="btn btn-delete">Удалить</button>
+          <button @click="remove(position.PositionID)" class="btn btn-delete">Удалить</button>
         </td>
       </tr>
       </tbody>
@@ -27,33 +27,37 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { getPositions, deletePosition } from '@/api/positionsApi';
 
 export default {
-  data() {
-    return {
-      positions: [],
-    };
-  },
-  async mounted() {
-    try {
-      const response = await axios.get('http://localhost:3010/api/positions');
-      this.positions = response.data;
-    } catch (error) {
-      console.error('Ошибка при загрузке позиций:', error);
-    }
-  },
-  methods: {
-    async deletePosition(id) {
+  setup() {
+    const positions = ref([]);
+
+    onMounted(async () => {
+      try {
+        const response = await getPositions();
+        positions.value = response.data;
+      } catch (error) {
+        console.error('Ошибка при загрузке позиций:', error);
+      }
+    });
+
+    const remove = async (id) => {
       if (confirm('Вы уверены, что хотите удалить эту позицию?')) {
         try {
-          await axios.delete(`http://localhost:3010/api/positions/${id}`);
-          this.positions = this.positions.filter(pos => pos.PositionID !== id);
+          await deletePosition(id);
+          positions.value = positions.value.filter(pos => pos.PositionID !== id);
         } catch (error) {
           console.error('Ошибка при удалении позиции:', error);
         }
       }
-    }
+    };
+
+    return {
+      positions,
+      remove
+    };
   }
 };
 </script>
@@ -106,10 +110,6 @@ h2 {
   display: inline-block;
 }
 
-.btn-view {
-  background: #2b5179;
-  color: white;
-}
 
 .btn-delete {
   background: #2b5179;

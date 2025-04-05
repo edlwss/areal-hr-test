@@ -1,7 +1,7 @@
 <template>
   <div class="form-container">
     <h2 class="form-title">Создать департамент</h2>
-    <form @submit.prevent="createDepartment" class="form">
+    <form @submit.prevent="submit" class="form">
       <label class="form-label">Организация:</label>
       <select v-model="organization_ID" required class="form-input">
         <option v-for="org in organizations" :key="org.OrganizationID" :value="org.OrganizationID">
@@ -31,55 +31,65 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { getDepartments, createDepartment } from '@/api/departmentsApi';
+import { getOrganizations } from '@/api/organizationsApi';
 
 export default {
-  data() {
-    return {
-      organization_ID: null,
-      parent_ID: null,
-      name: '',
-      comment: '',
-      errorMessage: '',
-      organizations: [],
-      departments: []
-    };
-  },
-  async mounted() {
-    try {
-      const [orgResponse, deptResponse] = await Promise.all([
-        axios.get('http://localhost:3010/api/organizations'),
-        axios.get('http://localhost:3010/api/departments')
-      ]);
+  setup() {
+    const organization_ID = ref(null);
+    const parent_ID = ref(null);
+    const name = ref('');
+    const comment = ref('');
+    const errorMessage = ref('');
+    const organizations = ref([]);
+    const departments = ref([]);
+    const router = useRouter();
 
-      this.organizations = orgResponse.data;
-      this.departments = deptResponse.data;
-    } catch (error) {
-      console.error('Ошибка при загрузке данных:', error);
-      this.errorMessage = 'Ошибка загрузки списка организаций и департаментов.';
-    }
-  },
-  methods: {
-    async createDepartment() {
+    onMounted(async () => {
       try {
-        const response = await axios.post('http://localhost:3010/api/departments', {
-          organization_ID: this.organization_ID,
-          parent_ID: this.parent_ID || null,
-          name: this.name,
-          comment: this.comment,
-        });
+        const [orgRes, deptRes] = await Promise.all([
+          getOrganizations(),
+          getDepartments()
+        ]);
+        organizations.value = orgRes.data;
+        departments.value = deptRes.data;
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+        errorMessage.value = 'Ошибка загрузки списка организаций и департаментов.';
+      }
+    });
 
-        if (response.data) {
-          this.$router.push('/departments');
-        }
+    const submit = async () => {
+      try {
+        await createDepartment({
+          organization_ID: organization_ID.value,
+          parent_ID: parent_ID.value || null,
+          name: name.value,
+          comment: comment.value,
+        });
+        await router.push('/departments');
       } catch (error) {
         console.error('Ошибка при создании департамента:', error);
-        this.errorMessage = 'Не удалось создать департамент. Проверьте данные.';
+        errorMessage.value = 'Не удалось создать департамент.';
       }
-    }
+    };
+
+    return {
+      organization_ID,
+      parent_ID,
+      name,
+      comment,
+      organizations,
+      departments,
+      errorMessage,
+      submit,
+    };
   }
 };
 </script>
+
 
 <style scoped>
 .form-container {

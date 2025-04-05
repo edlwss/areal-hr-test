@@ -1,8 +1,8 @@
 <template>
   <div class="form-container">
     <h2 class="form-title">Создание новой организации</h2>
-    <form @submit.prevent="createOrganization" class="form">
-      <label class="form-label">Название</label>
+    <form @submit.prevent="submit" class="form">
+    <label class="form-label">Название</label>
       <input v-model="name" class="form-input">
 
       <label class="form-label">Комментарий</label>
@@ -14,24 +14,31 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { createOrganization } from '@/api/organizationsApi';
 
 export default {
-  data() {
-    return {name: '', comment: ''};
-  },
-  methods: {
-    async createOrganization() {
+  setup() {
+    const name = ref('');
+    const comment = ref('');
+    const router = useRouter();
+
+    const submit = async () => {
       try {
-        await axios.post('http://localhost:3010/api/organizations', {name: this.name, comment: this.comment});
-        this.$router.push('/organizations');
+        await createOrganization({ name: name.value, comment: comment.value });
+        await router.push('/organizations');
       } catch (error) {
         console.error('Ошибка создания:', error);
       }
-    }
+    };
+
+    return { name, comment, submit };
   }
 };
 </script>
+
+
 
 <style scoped>
 .form-container {

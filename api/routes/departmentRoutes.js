@@ -3,7 +3,7 @@ const DepartmentService = require('../services/departmentService');
 
 const departmentRouter = express.Router();
 
-departmentRouter.post('/departments', async (req, res) => {
+departmentRouter.post('/department', async (req, res) => {
     try {
         const { organization_ID, parent_ID, name, comment } = req.body;
         const department = await DepartmentService.createDepartment(organization_ID, parent_ID, name, comment);
@@ -24,7 +24,7 @@ departmentRouter.get('/departments', async (req, res) => {
     }
 });
 
-departmentRouter.get('/departments/:id', async (req, res) => {
+departmentRouter.get('/department/:id', async (req, res) => {
     try {
         const department = await DepartmentService.getDepartmentById(req.params.id);
         if (!department) return res.status(404).json({ error: 'Department not found' });
@@ -34,7 +34,7 @@ departmentRouter.get('/departments/:id', async (req, res) => {
     }
 });
 
-departmentRouter.put('/departments/:id', async (req, res) => {
+departmentRouter.put('/department/:id', async (req, res) => {
     try {
         const { name, comment } = req.body;
         const updatedDepartment = await DepartmentService.updateDepartment(req.params.id, name, comment);
@@ -45,7 +45,7 @@ departmentRouter.put('/departments/:id', async (req, res) => {
     }
 });
 
-departmentRouter.delete('/departments/:id', async (req, res) => {
+departmentRouter.delete('/department/:id', async (req, res) => {
     try {
         const deletedDepartment = await DepartmentService.deleteDepartment(req.params.id);
         if (!deletedDepartment) return res.status(404).json({ error: 'Department not found' });

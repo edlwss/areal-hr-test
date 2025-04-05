@@ -1,7 +1,7 @@
 <template>
   <div class="form-container">
     <h2 class="form-title">Редактирование департамента</h2>
-    <form @submit.prevent="updateDepartment" class="form">
+    <form @submit.prevent="submit" class="form">
       <label class="form-label">Название:</label>
       <input v-model="name" type="text" required class="form-input">
 
@@ -14,35 +14,48 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { getDepartmentById, updateDepartment } from '@/api/departmentsApi';
 
 export default {
-  data() {
-    return {
-      name: '',
-      comment: '',
+  setup() {
+    const name = ref('');
+    const comment = ref('');
+    const route = useRoute();
+    const router = useRouter();
+
+    onMounted(async () => {
+      try {
+        const response = await getDepartmentById(route.params.id);
+        name.value = response.data.name;
+        comment.value = response.data.comment;
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+      }
+    });
+
+    const submit = async () => {
+      try {
+        await updateDepartment(route.params.id, {
+          name: name.value,
+          comment: comment.value,
+        });
+        await router.push('/departments');
+      } catch (error) {
+        console.error('Ошибка при обновлении:', error);
+      }
     };
-  },
-  async mounted() {
-    try {
-      const response = await axios.get(`http://localhost:3010/api/departments/${this.$route.params.id}`);
-      this.name = response.data.name;
-      this.comment = response.data.comment;
-    } catch (error) {
-      console.error('Ошибка при загрузке данных:', error);
-    }
-  },
-  methods: {
-    async updateDepartment() {
-      await axios.put(`http://localhost:3010/api/departments/${this.$route.params.id}`, {
-        name: this.name,
-        comment: this.comment,
-      });
-      this.$router.push('/departments');
-    }
+
+    return {
+      name,
+      comment,
+      submit
+    };
   }
 };
 </script>
+
 
 <style scoped>
 .form-container {

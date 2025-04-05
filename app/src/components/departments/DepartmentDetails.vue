@@ -38,38 +38,48 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { getDepartmentById } from '@/api/departmentsApi';
+import { getOrganizationById } from '@/api/organizationsApi';
 
 export default {
-  data() {
+  setup() {
+    const department = ref(null);
+    const organization = ref(null);
+    const parentDepartment = ref(null);
+    const route = useRoute();
+
+    onMounted(async () => {
+      try {
+        const { id } = route.params;
+
+        const deptRes = await getDepartmentById(id);
+        department.value = deptRes.data;
+
+        if (department.value.organization_ID) {
+          const orgRes = await getOrganizationById(department.value.organization_ID);
+          organization.value = orgRes.data;
+        }
+
+        if (department.value.parent_ID) {
+          const parentRes = await getDepartmentById(department.value.parent_ID);
+          parentDepartment.value = parentRes.data;
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+      }
+    });
+
     return {
-      department: null,
-      organization: null,
-      parentDepartment: null,
+      department,
+      organization,
+      parentDepartment
     };
-  },
-  async mounted() {
-    try {
-      const { id } = this.$route.params;
-
-      const departmentResponse = await axios.get(`http://localhost:3010/api/departments/${id}`);
-      this.department = departmentResponse.data;
-
-      if (this.department.organization_ID) {
-        const organizationResponse = await axios.get(`http://localhost:3010/api/organizations/${this.department.organization_ID}`);
-        this.organization = organizationResponse.data;
-      }
-
-      if (this.department.parent_ID) {
-        const parentResponse = await axios.get(`http://localhost:3010/api/departments/${this.department.parent_ID}`);
-        this.parentDepartment = parentResponse.data;
-      }
-    } catch (error) {
-      console.error('Ошибка при загрузке данных:', error);
-    }
   }
 };
 </script>
+
 
 <style scoped>
 .container {

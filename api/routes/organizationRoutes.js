@@ -3,7 +3,7 @@ const OrganizationService = require('../services/organizationService');
 
 const router = express.Router();
 
-router.post('/organizations', async (req, res) => {
+router.post('/organization', async (req, res) => {
     try {
         const { name, comment } = req.body;
         const organization = await OrganizationService.createOrganization(name, comment);
@@ -22,7 +22,7 @@ router.get('/organizations', async (req, res) => {
     }
 });
 
-router.get('/organizations/:id', async (req, res) => {
+router.get('/organization/:id', async (req, res) => {
     try {
         const organization = await OrganizationService.getOrganizationById(req.params.id);
         if (!organization) return res.status(404).json({ error: 'Organization not found' });
@@ -32,7 +32,7 @@ router.get('/organizations/:id', async (req, res) => {
     }
 });
 
-router.put('/organizations/:id', async (req, res) => {
+router.put('/organization/:id', async (req, res) => {
     try {
         const { name, comment } = req.body;
         const updatedOrganization = await OrganizationService.updateOrganization(req.params.id, name, comment);
@@ -43,7 +43,7 @@ router.put('/organizations/:id', async (req, res) => {
     }
 });
 
-router.delete('/organizations/:id', async (req, res) => {
+router.delete('/organization/:id', async (req, res) => {
     try {
         const deletedOrganization = await OrganizationService.deleteOrganization(req.params.id);
         if (!deletedOrganization) return res.status(404).json({ error: 'Organization not found' });

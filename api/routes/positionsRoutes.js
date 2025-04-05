@@ -3,7 +3,7 @@ const PositionService = require('../services/positionService');
 
 const router = express.Router();
 
-router.post('/positions', async (req, res) => {
+router.post('/position', async (req, res) => {
     try {
         const { name } = req.body;
         const position = await PositionService.createPosition(name);
@@ -22,7 +22,7 @@ router.get('/positions', async (req, res) => {
     }
 });
 
-router.get('/positions/:id', async (req, res) => {
+router.get('/position/:id', async (req, res) => {
     try {
         const position = await PositionService.getPositionById(req.params.id);
         if (!position) return res.status(404).json({ error: 'Position not found' });
@@ -32,7 +32,7 @@ router.get('/positions/:id', async (req, res) => {
     }
 });
 
-router.put('/positions/:id', async (req, res) => {
+router.put('/position/:id', async (req, res) => {
     try {
         const { name } = req.body;
         const updatedPosition = await PositionService.updatePosition(req.params.id, name);
@@ -43,7 +43,7 @@ router.put('/positions/:id', async (req, res) => {
     }
 });
 
-router.delete('/positions/:id', async (req, res) => {
+router.delete('/position/:id', async (req, res) => {
     try {
         const deletedPosition = await PositionService.deletePosition(req.params.id);
         if (!deletedPosition) return res.status(404).json({ error: 'Position not found' });

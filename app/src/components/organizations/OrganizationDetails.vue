@@ -16,24 +16,29 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import { getOrganizationById } from '@/api/organizationsApi';
 
 export default {
-  data() {
-    return {organization: null};
-  },
-  async mounted() {
+  setup() {
+    const organization = ref(null);
     const route = useRoute();
-    try {
-      const response = await axios.get(`http://localhost:3010/api/organizations/${route.params.id}`);
-      this.organization = response.data;
-    } catch (error) {
-      console.error('Ошибка загрузки:', error);
-    }
+
+    onMounted(async () => {
+      try {
+        const response = await getOrganizationById(route.params.id);
+        organization.value = response.data;
+      } catch (error) {
+        console.error('Ошибка загрузки организации:', error);
+      }
+    });
+
+    return { organization };
   }
 };
 </script>
+
 
 <style scoped>
 .container {

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2 class="text-2xl font-bold mb-4 text-center">Редактирование позиции</h2>
-    <form @submit.prevent="savePosition">
+    <form @submit.prevent="save">
       <label>Название:</label>
       <input v-model="position.name" required />
       <button type="submit" class="btn btn-save">Сохранить</button>
@@ -10,31 +10,38 @@
 </template>
 
 <script>
-import axios from 'axios';
+import { ref, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { getPositionById, updatePosition } from '@/api/positionsApi';
 
 export default {
-  data() {
-    return {
-      position: {name: ''},
-    };
-  },
-  async mounted() {
-    try {
-      const response = await axios.get(`http://localhost:3010/api/positions/${this.$route.params.id}`);
-      this.position = response.data;
-    } catch (error) {
-      console.error('Ошибка при загрузке позиции:', error);
-    }
-  },
-  methods: {
-    async savePosition() {
+  setup() {
+    const position = ref({ name: '' });
+    const route = useRoute();
+    const router = useRouter();
+
+    onMounted(async () => {
       try {
-        await axios.put(`http://localhost:3010/api/positions/${this.$route.params.id}`, this.position);
-        this.$router.push('/positions');
+        const response = await getPositionById(route.params.id);
+        position.value = response.data;
+      } catch (error) {
+        console.error('Ошибка при загрузке позиции:', error);
+      }
+    });
+
+    const save = async () => {
+      try {
+        await updatePosition(route.params.id, position.value);
+        await router.push('/positions');
       } catch (error) {
         console.error('Ошибка при сохранении позиции:', error);
       }
-    }
+    };
+
+    return {
+      position,
+      save
+    };
   }
 };
 </script>
