@@ -4,8 +4,11 @@ const express = require('express');
 const pool = require('./db');
 const organizationRoutes = require('./routes/organizationRoutes');
 const positionRoutes = require('./routes/positionsRoutes');
-const departmentRoutes = require('./routes/departmentRoutes')
-const workersRoutes = require('./routes/workersRoutes')
+const departmentRoutes = require('./routes/departmentRoutes');
+const workersRoutes = require('./routes/workersRoutes');
+const actionsRoutes = require("./routes/actionsRoutes");
+const hrOperationRoutes = require("./routes/hrOperationRoutes");
+const documentsRoutes = require('./routes/documentsRoutes');
 const cors = require('cors');
 
 const app = express();
@@ -15,7 +18,9 @@ app.use('/api', organizationRoutes);
 app.use('/api', positionRoutes);
 app.use('/api', departmentRoutes);
 app.use('/api', workersRoutes);
-
+app.use('/api', actionsRoutes);
+app.use('/api', hrOperationRoutes);
+app.use('/api', documentsRoutes);
 
 const PORT = process.env.PORT;
 const startServer = async () => {

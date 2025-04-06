@@ -31,3 +31,6 @@ coverage
 # Environment variables
 .env
 database.json
+
+/api/uploads/documents/*
+!/api/uploads/documents/.gitkeep
