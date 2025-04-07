@@ -57,6 +57,50 @@ class WorkerService {
         return rows[0];
     }
 
+    async updateWorker(id, { surname, name, middlename, birth_date, address, passport }) {
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
+
+            const workerQuery = `SELECT "passport_data_ID", "address_ID" FROM workers WHERE "WorkerID" = $1`;
+            const { rows } = await client.query(workerQuery, [id]);
+
+            if (rows.length === 0) {
+                throw new Error('Worker not found');
+            }
+
+            const { passport_data_ID, address_ID } = rows[0];
+
+            if (address) {
+                await AddressService.updateAddress(address_ID, address);
+            }
+
+            if (passport) {
+                await PassportDataService.updatePassportData(passport_data_ID, passport);
+            }
+
+            const updateWorkerQuery = `
+            UPDATE workers
+            SET surname = $1,
+                name = $2,
+                middlename = $3,
+                birth_date = $4,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE "WorkerID" = $5
+            RETURNING *`;
+            const values = [surname, name, middlename || null, birth_date, id];
+            const updated = await client.query(updateWorkerQuery, values);
+
+            await client.query('COMMIT');
+            return updated.rows[0];
+        } catch (err) {
+            await client.query('ROLLBACK');
+            throw err;
+        } finally {
+            client.release();
+        }
+    }
+
     async deleteWorker(id) {
         const query = `DELETE FROM workers WHERE "WorkerID" = $1 RETURNING *`;
         const { rows } = await pool.query(query, [id]);

@@ -32,6 +32,19 @@ router.get('/worker/:id', async (req, res) => {
     }
 });
 
+router.put('/worker/:id', async (req, res) => {
+    const workerId = parseInt(req.params.id, 10);
+    const data = req.body;
+
+    try {
+        const updatedWorker = await WorkerService.updateWorker(workerId, data);
+        res.json(updatedWorker);
+    } catch (error) {
+        console.error('Ошибка при обновлении работника:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 router.delete('/worker/:id', async (req, res) => {
     try {
         const deleted = await WorkerService.deleteWorker(req.params.id);
