@@ -4,6 +4,7 @@ import DepartmentsPage from '@/pages/DepartmentsPage.vue';
 import OrganizationsPage from "@/pages/OrganizationsPage.vue";
 import PositionsPage from "@/pages/PositionsPage.vue";
 import WorkersPage from "@/pages/WorkersPage.vue";
+import HrOperation from "@/pages/hrOperationsPage.vue";
 
 const routes = [
     { path: '/', component: Home },
@@ -26,7 +27,10 @@ const routes = [
     { path: '/workers', component: WorkersPage, name: 'workers', meta: { component: 'WorkersTable', title: 'Список работников' }},
     { path: '/worker/:id', component: WorkersPage, name: 'worker-details', meta: { component: 'WorkerDetails', title: 'Детали работника' }},
     { path: '/worker/new', component: WorkersPage, name: 'worker-create', meta: { component: 'CreateWorker', title: 'Создание работника' }},
-    { path: '/worker/:id/edit', component: WorkersPage, name: 'worker-edit', meta: { component: 'EditWorker', title: 'Редактирование работника' }}
+    { path: '/worker/:id/edit', component: WorkersPage, name: 'worker-edit', meta: { component: 'EditWorker', title: 'Редактирование работника' }},
+
+    { path: '/worker/:workerId/hr-operation/create', component: HrOperation, meta: {component: 'HrOperationForm', title: 'Создание HR-операции'}}
+
 ];
 
 const router = createRouter({

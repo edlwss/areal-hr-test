@@ -2,6 +2,10 @@
   <div class="container" v-if="worker">
     <h2 class="text-xl font-bold mb-4">Информация о работнике</h2>
 
+    <router-link :to="`/worker/${worker.WorkerID}/hr-operation/create`" class="btn btn-edit mt-4">
+      Создать HR Операцию
+    </router-link>
+
     <p><strong>Фамилия:</strong> {{ worker.surname }}</p>
     <p><strong>Имя:</strong> {{ worker.name }}</p>
     <p><strong>Отчество:</strong> {{ worker.middlename || '-' }}</p>
@@ -43,64 +47,64 @@
 </template>
 
 <script setup>
-import {ref, onMounted} from 'vue';
-import {useRoute} from 'vue-router';
-import {getWorkerById} from '@/api/workersApi';
-import {getDocumentsByWorkerId, deleteDocument, uploadDocument} from '@/api/documentApi';
+    import {ref, onMounted} from 'vue';
+    import {useRoute} from 'vue-router';
+    import {getWorkerById} from '@/api/workersApi';
+    import {getDocumentsByWorkerId, deleteDocument, uploadDocument} from '@/api/documentApi';
 
-const route = useRoute();
-const worker = ref(null);
-const documents = ref([]);
-const newDocName = ref('');
-const file = ref(null);
+    const route = useRoute();
+    const worker = ref(null);
+    const documents = ref([]);
+    const newDocName = ref('');
+    const file = ref(null);
 
-onMounted(async () => {
-  const res = await getWorkerById(route.params.id);
-  worker.value = res.data;
-  await loadDocuments();
-});
-
-const loadDocuments = async () => {
-  const res = await getDocumentsByWorkerId(route.params.id);
-  documents.value = res.data || [];
-};
-
-const onFileChange = (e) => {
-  file.value = e.target.files[0];
-};
-
-const onUpload = async () => {
-  if (!file.value || !newDocName.value) return;
-  const formData = new FormData();
-  formData.append('worker_ID', route.params.id);
-  formData.append('name', newDocName.value);
-  formData.append('file', file.value);
-  try {
-    await uploadDocument(formData);
-    await loadDocuments();
-    newDocName.value = '';
-    file.value = null;
-  } catch (err) {
-    console.error('Ошибка при загрузке документа:', err);
-  }
-};
-
-const onDelete = async (id) => {
-  if (confirm('Удалить документ?')) {
-    try {
-      await deleteDocument(id);
+    onMounted(async () => {
+      const res = await getWorkerById(route.params.id);
+      worker.value = res.data;
       await loadDocuments();
-    } catch (err) {
-      console.error('Ошибка при удалении документа:', err);
-    }
-  }
-};
+    });
 
-const formatDate = (isoString) => {
-  if (!isoString) return '-';
-  const date = new Date(isoString);
-  return date.toLocaleDateString('ru-RU');
-};
+    const loadDocuments = async () => {
+      const res = await getDocumentsByWorkerId(route.params.id);
+      documents.value = res.data || [];
+    };
+
+    const onFileChange = (e) => {
+      file.value = e.target.files[0];
+    };
+
+    const onUpload = async () => {
+      if (!file.value || !newDocName.value) return;
+      const formData = new FormData();
+      formData.append('worker_ID', route.params.id);
+      formData.append('name', newDocName.value);
+      formData.append('file', file.value);
+      try {
+        await uploadDocument(formData);
+        await loadDocuments();
+        newDocName.value = '';
+        file.value = null;
+      } catch (err) {
+        console.error('Ошибка при загрузке документа:', err);
+      }
+    };
+
+    const onDelete = async (id) => {
+      if (confirm('Удалить документ?')) {
+        try {
+          await deleteDocument(id);
+          await loadDocuments();
+        } catch (err) {
+          console.error('Ошибка при удалении документа:', err);
+        }
+      }
+    };
+
+    const formatDate = (isoString) => {
+      if (!isoString) return '-';
+      const date = new Date(isoString);
+      return date.toLocaleDateString('ru-RU');
+    };
 </script>
 
 <style scoped>
