@@ -16,28 +16,30 @@ router.post('/document', upload.single('file'), async (req, res) => {
     }
 });
 
-router.get('/documents', async (req, res) => {
+router.get('/worker/:workerId/documents', async (req, res) => {
     try {
-        const docs = await DocumentService.getAllDocuments();
+        const docs = await DocumentService.getDocumentsByWorkerId(req.params.workerId);
         res.json(docs);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Failed to fetch documents' });
+        res.status(500).json({ message: 'Failed to fetch worker documents' });
     }
 });
 
-router.get('/document/:id', async (req, res) => {
-    try {
-        const doc = await DocumentService.getDocumentById(req.params.id);
-        if (!doc) {
-            return res.status(404).json({ message: 'Document not found' });
-        }
-        res.json(doc);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Failed to fetch document' });
+const path = require('path');
+const fs = require('fs');
+
+router.get('/document/download/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path.join(__dirname, '../uploads/documents', filename);
+
+    if (fs.existsSync(filePath)) {
+        res.download(filePath);
+    } else {
+        res.status(404).json({ message: 'Файл не найден' });
     }
 });
+
 
 router.delete('/document/:id', async (req, res) => {
     try {

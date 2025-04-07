@@ -10,16 +10,13 @@ class DocumentService {
         return rows[0];
     }
 
-    async getAllDocuments() {
-        const query = `SELECT * FROM documentes WHERE deleted_at IS NULL ORDER BY "DocumentID"`;
-        const { rows } = await pool.query(query);
+    async getDocumentsByWorkerId(worker_ID) {
+        const query = `
+            SELECT * FROM documentes
+            WHERE "worker_ID" = $1 AND deleted_at IS NULL
+            ORDER BY "DocumentID"`;
+        const { rows } = await pool.query(query, [worker_ID]);
         return rows;
-    }
-
-    async getDocumentById(id) {
-        const query = `SELECT * FROM documentes WHERE "DocumentID" = $1 AND deleted_at IS NULL`;
-        const { rows } = await pool.query(query, [id]);
-        return rows[0];
     }
 
     async softDeleteDocument(id) {

@@ -1,6 +1,7 @@
 require('dotenv').config({ path: __dirname + '/../.env' });
 
 const express = require('express');
+const path = require('path');
 const pool = require('./db');
 const organizationRoutes = require('./routes/organizationRoutes');
 const positionRoutes = require('./routes/positionsRoutes');
@@ -21,6 +22,7 @@ app.use('/api', workersRoutes);
 app.use('/api', actionsRoutes);
 app.use('/api', hrOperationRoutes);
 app.use('/api', documentsRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads/documents')));
 
 const PORT = process.env.PORT;
 const startServer = async () => {

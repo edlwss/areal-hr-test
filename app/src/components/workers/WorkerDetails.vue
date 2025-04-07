@@ -23,21 +23,78 @@
 
     <router-link to="/workers" class="btn btn-edit mt-4">Назад</router-link>
     <router-link :to="`/worker/${worker.WorkerID}/edit`" class="btn btn-edit mt-4">Изменить</router-link>
+
+    <h3 class="section-title">Документы</h3>
+    <ul v-if="documents.length">
+      <li v-for="doc in documents" :key="doc.DocumentID" class="doc-item">
+        {{ doc.name }}
+        <a :href="`http://localhost:3010/api/document/download/${doc.file}`" target="_blank" class="btn btn-edit ml-2">Скачать</a>
+        <button @click="onDelete(doc.DocumentID)" class="btn btn-delete ml-2">✕</button>
+      </li>
+    </ul>
+    <p v-else>Документов пока нет.</p>
+
+    <form @submit.prevent="onUpload" class="upload-form">
+      <input type="text" v-model="newDocName" placeholder="Название документа" required />
+      <input type="file" @change="onFileChange" required />
+      <button type="submit" class="btn btn-edit mt-2">Загрузить</button>
+    </form>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { getWorkerById } from '@/api/workersApi';
-import { useRoute } from 'vue-router';
+import {ref, onMounted} from 'vue';
+import {useRoute} from 'vue-router';
+import {getWorkerById} from '@/api/workersApi';
+import {getDocumentsByWorkerId, deleteDocument, uploadDocument} from '@/api/documentApi';
 
 const route = useRoute();
 const worker = ref(null);
+const documents = ref([]);
+const newDocName = ref('');
+const file = ref(null);
 
 onMounted(async () => {
   const res = await getWorkerById(route.params.id);
   worker.value = res.data;
+  await loadDocuments();
 });
+
+const loadDocuments = async () => {
+  const res = await getDocumentsByWorkerId(route.params.id);
+  documents.value = res.data || [];
+};
+
+const onFileChange = (e) => {
+  file.value = e.target.files[0];
+};
+
+const onUpload = async () => {
+  if (!file.value || !newDocName.value) return;
+  const formData = new FormData();
+  formData.append('worker_ID', route.params.id);
+  formData.append('name', newDocName.value);
+  formData.append('file', file.value);
+  try {
+    await uploadDocument(formData);
+    await loadDocuments();
+    newDocName.value = '';
+    file.value = null;
+  } catch (err) {
+    console.error('Ошибка при загрузке документа:', err);
+  }
+};
+
+const onDelete = async (id) => {
+  if (confirm('Удалить документ?')) {
+    try {
+      await deleteDocument(id);
+      await loadDocuments();
+    } catch (err) {
+      console.error('Ошибка при удалении документа:', err);
+    }
+  }
+};
 
 const formatDate = (isoString) => {
   if (!isoString) return '-';
@@ -47,6 +104,20 @@ const formatDate = (isoString) => {
 </script>
 
 <style scoped>
+.doc-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+}
+
+.upload-form {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .container {
   max-width: 900px;
   margin: auto;
@@ -83,6 +154,11 @@ p {
 }
 
 .btn-edit {
+  background: #2b5179;
+  color: white;
+}
+
+.btn-delete {
   background: #2b5179;
   color: white;
 }
