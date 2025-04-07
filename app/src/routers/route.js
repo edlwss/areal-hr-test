@@ -26,7 +26,7 @@ const routes = [
     { path: '/workers', component: WorkersPage, name: 'workers', meta: { component: 'WorkersTable', title: 'Список работников' }},
     { path: '/worker/:id', component: WorkersPage, name: 'worker-details', meta: { component: 'WorkerDetails', title: 'Детали работника' }},
     { path: '/worker/new', component: WorkersPage, name: 'worker-create', meta: { component: 'CreateWorker', title: 'Создание работника' }},
-    // { path: '/worker/:id/edit', component: WorkersPage, name: 'worker-edit', meta: { component: 'EditWorker', title: 'Редактирование работника' }}
+    { path: '/worker/:id/edit', component: WorkersPage, name: 'worker-edit', meta: { component: 'EditWorker', title: 'Редактирование работника' }}
 ];
 
 const router = createRouter({

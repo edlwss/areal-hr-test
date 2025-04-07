@@ -22,6 +22,7 @@
     <p><strong>Квартира:</strong> {{ worker.apartment || '-' }}</p>
 
     <router-link to="/workers" class="btn btn-edit mt-4">Назад</router-link>
+    <router-link :to="`/worker/${worker.WorkerID}/edit`" class="btn btn-edit mt-4">Изменить</router-link>
   </div>
 </template>
 

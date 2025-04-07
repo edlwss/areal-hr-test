@@ -3,7 +3,7 @@
     <h2 class="text-2xl font-bold mb-4 text-center">Работники</h2>
     <router-link to="/worker/new" class="btn-add">Создать работника</router-link>
 
-    <table class="table mt-4">
+    <table class="table">
       <thead>
       <tr>
         <th>ФИО</th>
@@ -11,7 +11,10 @@
       </tr>
       </thead>
       <tbody>
-      <tr v-for="worker in workers" :key="worker.WorkerID">
+      <tr
+          v-for="worker in filteredWorkers"
+          :key="worker.WorkerID"
+      >
         <td>
           <router-link :to="`/worker/${worker.WorkerID}`" class="link">
             {{ worker.surname }} {{ worker.name }} {{ worker.middlename || '' }}
@@ -28,28 +31,39 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
+<script>
 import { getWorkers, deleteWorker as apiDeleteWorker } from '@/api/workersApi';
 
-const workers = ref([]);
-
-onMounted(async () => {
-  try {
-    const response = await getWorkers();
-    workers.value = response.data || response;
-  } catch (error) {
-    console.error('Ошибка при загрузке работников:', error);
-  }
-});
-
-const deleteWorker = async (id) => {
-  if (confirm('Удалить работника?')) {
+export default {
+  data() {
+    return {
+      workers: [],
+    };
+  },
+  computed: {
+    filteredWorkers() {
+      // Фильтруем только тех, у кого deleted_at === null
+      return this.workers.filter(w => !w.deleted_at);
+    }
+  },
+  async mounted() {
     try {
-      await apiDeleteWorker(id);
-      workers.value = workers.value.filter(w => w.WorkerID !== id);
+      const response = await getWorkers();
+      this.workers = response.data || response;
     } catch (error) {
-      console.error('Ошибка при удалении работника:', error);
+      console.error('Ошибка при загрузке работников:', error);
+    }
+  },
+  methods: {
+    async deleteWorker(id) {
+      if (confirm('Удалить работника?')) {
+        try {
+          await apiDeleteWorker(id);
+          this.workers = this.workers.filter(w => w.WorkerID !== id);
+        } catch (error) {
+          console.error('Ошибка при удалении работника:', error);
+        }
+      }
     }
   }
 };

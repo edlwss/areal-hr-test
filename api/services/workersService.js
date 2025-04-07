@@ -103,7 +103,10 @@ class WorkerService {
     }
 
     async deleteWorker(id) {
-        const query = `DELETE FROM workers WHERE "WorkerID" = $1 RETURNING *`;
+        const query = `
+            UPDATE workers
+            SET deleted_at = CURRENT_TIMESTAMP
+            WHERE "WorkerID" = $1 RETURNING *`;
         const { rows } = await pool.query(query, [id]);
         return rows[0];
     }

@@ -10,7 +10,7 @@
 import Navbar from '@/components/Navbar.vue';
 import WorkersTable from '@/components/workers/WorkersTable.vue';
 import WorkerDetails from '@/components/workers/WorkerDetails.vue';
-// import EditWorker from '@/components/workers/EditWorker.vue';
+import EditWorker from '@/components/workers/EditWorker.vue';
 import CreateWorker from '@/components/workers/WorkerCreate.vue';
 
 export default {
@@ -18,7 +18,7 @@ export default {
     Navbar,
     WorkersTable,
     WorkerDetails,
-    // EditWorker,
+    EditWorker,
     CreateWorker
   },
   computed: {
