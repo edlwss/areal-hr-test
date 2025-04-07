@@ -3,6 +3,7 @@ import Home from '../components/Home.vue';
 import DepartmentsPage from '@/pages/DepartmentsPage.vue';
 import OrganizationsPage from "@/pages/OrganizationsPage.vue";
 import PositionsPage from "@/pages/PositionsPage.vue";
+import WorkersPage from "@/pages/WorkersPage.vue";
 
 const routes = [
     { path: '/', component: Home },
@@ -20,7 +21,12 @@ const routes = [
     { path: '/departments', component: DepartmentsPage, name: 'departments', meta: { component: 'DepartmentsTable', title: 'Список департаментов' } },
     { path: '/department/:id', component: DepartmentsPage, name: 'department-details', meta: { component: 'DepartmentDetails', title: 'Детали департамента' } },
     { path: '/department/new', component: DepartmentsPage, name: 'department-create', meta: { component: 'CreateDepartment', title: 'Создание департамента' } },
-    { path: '/department/:id/edit', component: DepartmentsPage, name: 'department-edit', meta: { component: 'EditDepartment', title: 'Редактирование департамента' } }
+    { path: '/department/:id/edit', component: DepartmentsPage, name: 'department-edit', meta: { component: 'EditDepartment', title: 'Редактирование департамента' } },
+
+    { path: '/workers', component: WorkersPage, name: 'workers', meta: { component: 'WorkersTable', title: 'Список работников' }},
+    { path: '/worker/:id', component: WorkersPage, name: 'worker-details', meta: { component: 'WorkerDetails', title: 'Детали работника' }},
+    { path: '/worker/new', component: WorkersPage, name: 'worker-create', meta: { component: 'CreateWorker', title: 'Создание работника' }},
+    // { path: '/worker/:id/edit', component: WorkersPage, name: 'worker-edit', meta: { component: 'EditWorker', title: 'Редактирование работника' }}
 ];
 
 const router = createRouter({

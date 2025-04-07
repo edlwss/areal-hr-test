@@ -6,6 +6,7 @@
         <router-link to="/organizations" class="menu-item">Организации</router-link>
         <router-link to="/departments" class="menu-item">Департаменты</router-link>
         <router-link to="/positions" class="menu-item">Должности</router-link>
+        <router-link to="/workers" class="menu-item">Работники</router-link>
       </div>
     </div>
   </div>
@@ -61,3 +62,5 @@
   transform: scale(1);
 }
 </style>
+<script setup lang="ts">
+</script>

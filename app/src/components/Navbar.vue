@@ -4,6 +4,7 @@
     <router-link to="/organizations">Организации</router-link>
     <router-link to="/positions">Должности</router-link>
     <router-link to="/departments">Отделы</router-link>
+    <router-link to="/workers">Работники</router-link>
   </nav>
 </template>
 

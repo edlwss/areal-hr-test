@@ -4,6 +4,7 @@ const PassportDataService = require('./passportService');
 
 class WorkerService {
     async createWorker({ surname, name, middlename, birth_date, address, passport }) {
+        console.log('data_of_issue:', passport.data_of_issue)
         const client = await pool.connect();
         try {
             await client.query('BEGIN');
