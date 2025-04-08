@@ -1,9 +1,11 @@
 const express = require('express');
 const WorkerService = require('../services/workersService');
+const { createWorkerSchema } = require('../validators/workerValidator');
+const validate = require('../validate');
 
 const router = express.Router();
 
-router.post('/worker', async (req, res) => {
+router.post('/worker', validate(createWorkerSchema), async (req, res) => {
     try {
         const worker = await WorkerService.createWorker(req.body);
         res.status(201).json(worker);
@@ -12,6 +14,7 @@ router.post('/worker', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
 
 router.get('/workers', async (req, res) => {
     try {

@@ -22,7 +22,6 @@ router.get('/hr_operations/worker/:workerId', async (req, res) => {
     }
 });
 
-
 router.delete('/hr_operations/:id', async (req, res) => {
     try {
         const deleted = await HrOperationService.deleteHrOperation(req.params.id);
