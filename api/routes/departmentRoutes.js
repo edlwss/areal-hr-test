@@ -1,9 +1,11 @@
 const express = require('express');
 const DepartmentService = require('../services/departmentService');
+const validate = require('../validate');
+const { createDepartmentSchema, updateDepartmentSchema } = require('../validators/departmentValidator');
 
 const departmentRouter = express.Router();
 
-departmentRouter.post('/department', async (req, res) => {
+departmentRouter.post('/department', validate(createDepartmentSchema), async (req, res) => {
     try {
         const { organization_ID, parent_ID, name, comment } = req.body;
         const department = await DepartmentService.createDepartment(organization_ID, parent_ID, name, comment);
@@ -34,7 +36,7 @@ departmentRouter.get('/department/:id', async (req, res) => {
     }
 });
 
-departmentRouter.put('/department/:id', async (req, res) => {
+departmentRouter.put('/department/:id', validate(updateDepartmentSchema), async (req, res) => {
     try {
         const { name, comment } = req.body;
         const updatedDepartment = await DepartmentService.updateDepartment(req.params.id, name, comment);

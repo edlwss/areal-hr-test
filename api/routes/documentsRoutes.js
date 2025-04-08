@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../upload');
 const DocumentService = require('../services/documentsService');
+const { createDocumentSchema} = require('../validators/documentValidator');
+const validate = require('../validate');
 
-router.post('/document', upload.single('file'), async (req, res) => {
+router.post('/document', validate(createDocumentSchema), upload.single('file'), async (req, res) => {
     try {
         const { worker_ID, name } = req.body;
         const file = req.file.filename;

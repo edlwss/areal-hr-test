@@ -1,9 +1,11 @@
 const express = require('express');
 const PositionService = require('../services/positionService');
+const validate = require('../validate');
+const { createPositionSchema, updatePositionSchema } = require('../validators/positionValidator');
 
 const router = express.Router();
 
-router.post('/position', async (req, res) => {
+router.post('/position', validate(createPositionSchema), async (req, res) => {
     try {
         const { name } = req.body;
         const position = await PositionService.createPosition(name);
@@ -32,7 +34,7 @@ router.get('/position/:id', async (req, res) => {
     }
 });
 
-router.put('/position/:id', async (req, res) => {
+router.put('/position/:id', validate(updatePositionSchema), async (req, res) => {
     try {
         const { name } = req.body;
         const updatedPosition = await PositionService.updatePosition(req.params.id, name);
