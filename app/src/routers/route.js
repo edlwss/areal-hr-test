@@ -29,7 +29,8 @@ const routes = [
     { path: '/worker/new', component: WorkersPage, name: 'worker-create', meta: { component: 'CreateWorker', title: 'Создание работника' }},
     { path: '/worker/:id/edit', component: WorkersPage, name: 'worker-edit', meta: { component: 'EditWorker', title: 'Редактирование работника' }},
 
-    { path: '/worker/:workerId/hr-operation/create', component: HrOperation, meta: {component: 'HrOperationForm', title: 'Создание HR-операции'}}
+    { path: '/worker/:workerId/hr-operation/create', component: HrOperation, meta: {component: 'HrOperationForm', title: 'Создание HR-операции'}},
+    {path: '/worker/:workerId/hr-history', component: HrOperation, meta: {component: 'WorkerHrHistory', title: 'История HR-операции'}}
 
 ];
 

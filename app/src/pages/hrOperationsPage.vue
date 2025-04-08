@@ -1,10 +1,30 @@
 <template>
   <div>
-    <h1>Создание HR операции</h1>
-    <HrOperationForm />
+    <Navbar />
+    <h1>{{ pageTitle }}</h1>
+    <component :is="currentComponent" />
   </div>
 </template>
 
-<script setup>
-import HrOperationForm from '@/components/hrOperation.vue';
+<script>
+import Navbar from '@/components/Navbar.vue';
+import HrOperationForm from '@/components/hrOperations/HrOperation.vue';
+import WorkerHrHistory from '@/components/hrOperations/hrOperationsHistory.vue';
+
+export default {
+  components: {
+    Navbar,
+    HrOperationForm,
+    WorkerHrHistory
+  },
+  computed: {
+    currentComponent() {
+      return this.$route.meta.component || 'HrOperationForm';
+    },
+    pageTitle() {
+      return this.$route.meta.title || 'Управление HR операциями';
+    }
+  }
+};
 </script>
+

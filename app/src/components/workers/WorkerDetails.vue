@@ -5,6 +5,9 @@
     <router-link :to="`/worker/${worker.WorkerID}/hr-operation/create`" class="btn btn-edit mt-4">
       Создать HR Операцию
     </router-link>
+    <router-link :to="`/worker/${worker.WorkerID}/hr-history`" class="btn btn-edit mt-4">
+      История HR
+    </router-link>
 
     <p><strong>Фамилия:</strong> {{ worker.surname }}</p>
     <p><strong>Имя:</strong> {{ worker.name }}</p>

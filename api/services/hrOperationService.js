@@ -10,70 +10,30 @@ class HrOperationService {
         return rows[0];
     }
 
-    async getHrOperationById(id) {
+    async getOperationsByWorkerId(workerId) {
         const query = `
-            SELECT
-                h."HrOperationID",
-                h.salary,
-                w."WorkerID",
-                w.surname,
-                w.name,
-                a."ActionID",
-                a.name AS action_name,
-                p."PositionID",
-                p.name AS position_name,
-                d."DepartmentID",
-                d.name AS department_name
-            FROM hr_operations h
-                     JOIN workers w ON h."worker_ID" = w."WorkerID"
-                     JOIN actions a ON h."actionID" = a."ActionID"
-                     JOIN positions p ON h."position_ID" = p."PositionID"
-                     JOIN departments d ON h."department_ID" = d."DepartmentID"
-            WHERE h."HrOperationID" = $1`;
-
-        const { rows } = await pool.query(query, [id]);
-        return rows[0];
-    }
-
-
-    async getAllHrOperations() {
-        const query = `
-            SELECT
-                h."HrOperationID",
-                h.salary,
-                w."WorkerID",
-                w.surname,
-                w.name,
-                a."ActionID",
-                a.name AS action_name,
-                p."PositionID",
-                p.name AS position_name,
-                d."DepartmentID",
-                d.name AS department_name
-            FROM hr_operations h
-                     JOIN workers w ON h."worker_ID" = w."WorkerID"
-                     JOIN actions a ON h."actionID" = a."ActionID"
-                     JOIN positions p ON h."position_ID" = p."PositionID"
-                     JOIN departments d ON h."department_ID" = d."DepartmentID"
-            ORDER BY h."HrOperationID"`;
-
-        const { rows } = await pool.query(query);
+        SELECT
+            h."HrOperationID",
+            h.salary,
+            h."worker_ID",
+            h."actionID",
+            h."position_ID",
+            h."department_ID",
+            w.surname,
+            w.name,
+            a.name AS action_name,
+            p.name AS position_name,
+            d.name AS department_name
+        FROM hr_operations h
+            JOIN workers w ON h."worker_ID" = w."WorkerID"
+            JOIN actions a ON h."actionID" = a."ActionID"
+            LEFT JOIN positions p ON h."position_ID" = p."PositionID"
+            LEFT JOIN departments d ON h."department_ID" = d."DepartmentID"
+        WHERE h."worker_ID" = $1
+        ORDER BY h."HrOperationID" DESC
+    `;
+        const { rows } = await pool.query(query, [workerId]);
         return rows;
-    }
-
-
-    async updateHrOperation(id, { worker_ID, actionID, position_ID, department_ID, salary }) {
-        const query = `
-            UPDATE hr_operations
-            SET "worker_ID" = $1,
-                "actionID" = $2,
-                "position_ID" = $3,
-                "department_ID" = $4,
-                salary = $5
-            WHERE "HrOperationID" = $6
-            RETURNING *`;
-        const { rows } = await pool.query(query, [worker_ID, actionID, position_ID, department_ID, salary, id]);
-        return rows[0];
     }
 
     async deleteHrOperation(id) {
