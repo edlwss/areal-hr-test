@@ -89,6 +89,29 @@ const createWorkerSchema = Joi.object({
     address: addressSchema.required()
 });
 
+const updateWorkerSchema = Joi.object({
+    surname: Joi.string().max(100).messages({
+        'string.max': 'Фамилия не должна превышать 100 символов'
+    }),
+    name: Joi.string().max(100).messages({
+        'string.max': 'Имя не должно превышать 100 символов'
+    }),
+    middlename: Joi.string().max(100),
+
+    birth_date: Joi.date()
+        .min('1900-01-01')
+        .max(new Date())
+        .messages({
+            'date.base': 'Дата рождения должна быть корректной датой',
+            'date.min': 'Дата рождения не может быть раньше 1900 года',
+            'date.max': 'Дата рождения не может быть в будущем'
+        }),
+
+    passport: passportSchema,
+    address: addressSchema
+});
+
 module.exports = {
-    createWorkerSchema
+    createWorkerSchema,
+    updateWorkerSchema
 };

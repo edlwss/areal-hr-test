@@ -1,6 +1,6 @@
 const express = require('express');
 const WorkerService = require('../services/workersService');
-const { createWorkerSchema } = require('../validators/workerValidator');
+const { createWorkerSchema, updateWorkerSchema} = require('../validators/workerValidator');
 const validate = require('../validate');
 
 const router = express.Router();
@@ -35,7 +35,7 @@ router.get('/worker/:id', async (req, res) => {
     }
 });
 
-router.put('/worker/:id', async (req, res) => {
+router.put('/worker/:id', validate(updateWorkerSchema), async (req, res) => {
     const workerId = parseInt(req.params.id, 10);
     const data = req.body;
 

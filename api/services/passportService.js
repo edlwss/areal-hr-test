@@ -14,12 +14,6 @@ class PassportDataService {
     }
 
 
-    async getPassportDataById(id) {
-        const query = `SELECT * FROM passport_data WHERE "PassportDataID" = $1`;
-        const { rows } = await pool.query(query, [id]);
-        return rows[0];
-    }
-
     async updatePassportData(id, { passport_series, passport_number, data_of_issue, unit_code, issued_by_whom }) {
         const query = `
             UPDATE passport_data

@@ -10,12 +10,6 @@ class AddressService {
         return rows[0];
     }
 
-    async getAddressById(id) {
-        const query = `SELECT * FROM addresses WHERE "AddressID" = $1`;
-        const { rows } = await pool.query(query, [id]);
-        return rows[0];
-    }
-
     async updateAddress(id, { regin, localities, street, house, building, apartment }) {
         const query = `
             UPDATE addresses SET regin = $1, localities = $2, street = $3,

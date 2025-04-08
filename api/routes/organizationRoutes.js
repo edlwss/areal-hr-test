@@ -1,9 +1,12 @@
 const express = require('express');
 const OrganizationService = require('../services/organizationService');
+const { organizationCreateSchema, organizationUpdateSchema} = require('../validators/organizationValidator');
+const validate = require('../validate');
+const {updateWorkerSchema} = require("../validators/workerValidator");
 
 const router = express.Router();
 
-router.post('/organization', async (req, res) => {
+router.post('/organization',  validate(organizationCreateSchema), async (req, res) => {
     try {
         const { name, comment } = req.body;
         const organization = await OrganizationService.createOrganization(name, comment);
@@ -32,7 +35,7 @@ router.get('/organization/:id', async (req, res) => {
     }
 });
 
-router.put('/organization/:id', async (req, res) => {
+router.put('/organization/:id', validate(updateWorkerSchema), async (req, res) => {
     try {
         const { name, comment } = req.body;
         const updatedOrganization = await OrganizationService.updateOrganization(req.params.id, name, comment);
