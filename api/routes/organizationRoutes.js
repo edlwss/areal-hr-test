@@ -35,7 +35,7 @@ router.get('/organization/:id', async (req, res) => {
     }
 });
 
-router.put('/organization/:id', validate(updateWorkerSchema), async (req, res) => {
+router.put('/organization/:id', validate(organizationUpdateSchema), async (req, res) => {
     try {
         const { name, comment } = req.body;
         const updatedOrganization = await OrganizationService.updateOrganization(req.params.id, name, comment);

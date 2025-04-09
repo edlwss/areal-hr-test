@@ -10,7 +10,7 @@ const positionSchema = Joi.object({
             'string.max': 'Название должности не должно превышать 100 символов',
             'any.required': 'Название должности обязательно'
         })
-});
+}).unknown(true);
 
 module.exports = {
     createPositionSchema: positionSchema,

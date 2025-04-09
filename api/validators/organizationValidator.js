@@ -16,7 +16,7 @@ const organizationCreateSchema = Joi.object({
         .messages({
             'string.max': 'Комментарий не должен превышать 200 символов'
         })
-});
+}).unknown(true);
 
 const organizationUpdateSchema = Joi.object({
     name: Joi.string()
@@ -30,7 +30,7 @@ const organizationUpdateSchema = Joi.object({
         .messages({
             'string.max': 'Комментарий не должен превышать 200 символов'
         })
-});
+}).unknown(true);
 
 module.exports = {
     organizationCreateSchema,

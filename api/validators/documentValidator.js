@@ -1,7 +1,6 @@
 const Joi = require('joi');
 
-const baseDocumentSchema = {
-
+const createDocumentSchema = Joi.object({
     name: Joi.string()
         .max(100)
         .required()
@@ -10,9 +9,8 @@ const baseDocumentSchema = {
             'string.empty': 'Название документа не должно быть пустым',
             'string.max': 'Название документа не должно превышать 100 символов',
         })
-};
+}).unknown(true);
 
-const createDocumentSchema = Joi.object(baseDocumentSchema);
 
 module.exports = {
     createDocumentSchema

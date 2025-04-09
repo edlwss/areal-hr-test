@@ -1,19 +1,18 @@
 const Joi = require('joi');
 
-const departmentBaseSchema = {
+const baseFields = {
     organization_ID: Joi.number()
-        .required()
         .messages({
+            'number.base': 'ID организации должен быть числом',
             'any.required': 'ID организации обязателен'
         }),
 
     name: Joi.string()
         .max(100)
-        .required()
         .messages({
-            'any.required': 'Название отдела обязательно',
             'string.empty': 'Название отдела не должно быть пустым',
             'string.max': 'Название отдела не должно превышать 100 символов',
+            'any.required': 'Название отдела обязательно',
         }),
 
     comment: Joi.string()
@@ -24,11 +23,17 @@ const departmentBaseSchema = {
         })
 };
 
-const createDepartmentSchema = Joi.object(departmentBaseSchema);
+const createDepartmentSchema = Joi.object({
+    organization_ID: baseFields.organization_ID.required(),
+    name: baseFields.name.required(),
+    comment: baseFields.comment
+}).unknown(true);
 
 const updateDepartmentSchema = Joi.object({
-    ...departmentBaseSchema
-});
+    organization_ID: baseFields.organization_ID,
+    name: baseFields.name,
+    comment: baseFields.comment
+}).unknown(true);
 
 module.exports = {
     createDepartmentSchema,

@@ -42,7 +42,7 @@
     <p v-else>Документов пока нет.</p>
 
     <form @submit.prevent="onUpload" class="upload-form">
-      <input type="text" v-model="newDocName" placeholder="Название документа" required />
+      <input type="text" v-model="name" placeholder="Название документа" required />
       <input type="file" @change="onFileChange" required />
       <button type="submit" class="btn btn-edit mt-2">Загрузить</button>
     </form>
@@ -58,7 +58,7 @@
     const route = useRoute();
     const worker = ref(null);
     const documents = ref([]);
-    const newDocName = ref('');
+    const name = ref('');
     const file = ref(null);
 
     onMounted(async () => {
@@ -77,15 +77,15 @@
     };
 
     const onUpload = async () => {
-      if (!file.value || !newDocName.value) return;
+      if (!file.value || !name.value) return;
       const formData = new FormData();
       formData.append('worker_ID', route.params.id);
-      formData.append('name', newDocName.value);
+      formData.append('name', name.value);
       formData.append('file', file.value);
       try {
         await uploadDocument(formData);
         await loadDocuments();
-        newDocName.value = '';
+        name.value = '';
         file.value = null;
       } catch (err) {
         console.error('Ошибка при загрузке документа:', err);

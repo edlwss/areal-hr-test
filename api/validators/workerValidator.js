@@ -87,7 +87,7 @@ const createWorkerSchema = Joi.object({
 
     passport: passportSchema.required(),
     address: addressSchema.required()
-});
+}).unknown(true);
 
 const updateWorkerSchema = Joi.object({
     surname: Joi.string().max(100).messages({
@@ -109,7 +109,7 @@ const updateWorkerSchema = Joi.object({
 
     passport: passportSchema,
     address: addressSchema
-});
+}).unknown(true);
 
 module.exports = {
     createWorkerSchema,

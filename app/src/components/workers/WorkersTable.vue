@@ -42,7 +42,6 @@ export default {
   },
   computed: {
     filteredWorkers() {
-      // Фильтруем только тех, у кого deleted_at === null
       return this.workers.filter(w => !w.deleted_at);
     }
   },
