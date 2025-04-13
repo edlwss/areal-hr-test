@@ -2,11 +2,13 @@
   <div class="form-container">
     <h2 class="form-title">Создание новой организации</h2>
     <form @submit.prevent="submit" class="form">
-    <label class="form-label">Название</label>
-      <input v-model="name" class="form-input">
+      <label class="form-label">Название</label>
+      <input v-model="name" class="form-input" />
+      <p v-if="errors.name" class="error-text">{{ errors.name }}</p>
 
       <label class="form-label">Комментарий</label>
-      <input v-model="comment" class="form-input">
+      <input v-model="comment" class="form-input" />
+      <p v-if="errors.comment" class="error-text">{{ errors.comment }}</p>
 
       <button type="submit" class="form-button">Создать</button>
     </form>
@@ -22,25 +24,46 @@ export default {
   setup() {
     const name = ref('');
     const comment = ref('');
+    const errors = ref({});
     const router = useRouter();
 
     const submit = async () => {
+      errors.value = {};
       try {
-        await createOrganization({ name: name.value, comment: comment.value });
+        await createOrganization({
+          name: name.value,
+          comment: comment.value
+        });
         await router.push('/organizations');
       } catch (error) {
-        console.error('Ошибка создания:', error);
+        const response = error.response;
+        if (response?.status === 400 && Array.isArray(response.data.errors)) {
+          for (const err of response.data.errors) {
+            errors.value[err.field] = err.message;
+          }
+        } else {
+          console.error('Ошибка создания:', error);
+        }
       }
     };
 
-    return { name, comment, submit };
+    return {
+      name,
+      comment,
+      errors,
+      submit
+    };
   }
 };
 </script>
 
-
-
 <style scoped>
+.error-text {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: -12px;
+}
+
 .form-container {
   max-width: 600px;
   margin: 50px auto;
@@ -89,6 +112,6 @@ export default {
 }
 
 .form-button:hover {
-  background-color: #2b5179;
+  background-color: #1e3b5c;
 }
 </style>

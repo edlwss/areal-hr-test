@@ -8,6 +8,7 @@
           {{ org.name }}
         </option>
       </select>
+      <p v-if="errors.organization_ID" class="error-text">{{ errors.organization_ID }}</p>
 
       <label class="form-label">Родительский департамент (необязательно):</label>
       <select v-model="parent_ID" class="form-input">
@@ -18,15 +19,15 @@
       </select>
 
       <label class="form-label">Название:</label>
-      <input v-model="name" type="text" required class="form-input">
+      <input v-model="name" type="text" required class="form-input" />
+      <p v-if="errors.name" class="error-text">{{ errors.name }}</p>
 
       <label class="form-label">Комментарий:</label>
-      <input v-model="comment" type="text" class="form-input">
+      <input v-model="comment" type="text" class="form-input" />
+      <p v-if="errors.comment" class="error-text">{{ errors.comment }}</p>
 
       <button type="submit" class="form-button">Создать</button>
     </form>
-
-    <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
   </div>
 </template>
 
@@ -42,7 +43,7 @@ export default {
     const parent_ID = ref(null);
     const name = ref('');
     const comment = ref('');
-    const errorMessage = ref('');
+    const errors = ref({});
     const organizations = ref([]);
     const departments = ref([]);
     const router = useRouter();
@@ -57,11 +58,11 @@ export default {
         departments.value = deptRes.data;
       } catch (error) {
         console.error('Ошибка при загрузке данных:', error);
-        errorMessage.value = 'Ошибка загрузки списка организаций и департаментов.';
       }
     });
 
     const submit = async () => {
+      errors.value = {};
       try {
         await createDepartment({
           organization_ID: organization_ID.value,
@@ -71,8 +72,13 @@ export default {
         });
         await router.push('/departments');
       } catch (error) {
-        console.error('Ошибка при создании департамента:', error);
-        errorMessage.value = 'Не удалось создать департамент.';
+        if (error.response?.status === 400 && Array.isArray(error.response.data.errors)) {
+          for (const err of error.response.data.errors) {
+            errors.value[err.field] = err.message;
+          }
+        } else {
+          console.error('Ошибка при создании департамента:', error);
+        }
       }
     };
 
@@ -83,7 +89,7 @@ export default {
       comment,
       organizations,
       departments,
-      errorMessage,
+      errors,
       submit,
     };
   }
@@ -92,6 +98,13 @@ export default {
 
 
 <style scoped>
+
+.error-text {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: -12px;
+}
+
 .form-container {
   max-width: 600px;
   margin: 50px auto;

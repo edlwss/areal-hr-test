@@ -3,10 +3,12 @@
     <h2 class="form-title">Редактирование организации</h2>
     <form @submit.prevent="updateOrganization" class="form">
       <label class="form-label">Название</label>
-      <input v-model="organization.name" class="form-input">
+      <input v-model="organization.name" class="form-input" />
+      <p v-if="errors.name" class="error-text">{{ errors.name }}</p>
 
       <label class="form-label">Комментарий</label>
-      <input v-model="organization.comment" class="form-input">
+      <input v-model="organization.comment" class="form-input" />
+      <p v-if="errors.comment" class="error-text">{{ errors.comment }}</p>
 
       <button type="submit" class="form-button">Сохранить</button>
     </form>
@@ -16,11 +18,15 @@
 <script>
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { getOrganizationById, updateOrganization as apiUpdateOrganization } from '@/api/organizationsApi';
+import {
+  getOrganizationById,
+  updateOrganization as apiUpdateOrganization,
+} from '@/api/organizationsApi';
 
 export default {
   setup() {
     const organization = ref({ name: '', comment: '' });
+    const errors = ref({});
     const route = useRoute();
     const router = useRouter();
 
@@ -34,21 +40,39 @@ export default {
     });
 
     const updateOrganization = async () => {
+      errors.value = {};
       try {
         await apiUpdateOrganization(route.params.id, organization.value);
         await router.push('/organizations');
       } catch (error) {
-        console.error('Ошибка обновления:', error);
+        const response = error.response;
+        if (response?.status === 400 && Array.isArray(response.data.errors)) {
+          for (const err of response.data.errors) {
+            errors.value[err.field] = err.message;
+          }
+        } else {
+          console.error('Ошибка обновления:', error);
+        }
       }
     };
 
-    return { organization, updateOrganization };
-  }
+    return {
+      organization,
+      errors,
+      updateOrganization,
+    };
+  },
 };
 </script>
 
 
 <style scoped>
+.error-text {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: -12px;
+}
+
 .form-container {
   max-width: 600px;
   margin: 50px auto;
