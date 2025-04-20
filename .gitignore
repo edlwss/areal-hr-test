@@ -32,5 +32,4 @@ coverage
 .env
 database.json
 
-/api/uploads/documents/*
-!/api/uploads/documents/.gitkeep
+/api/uploads/*

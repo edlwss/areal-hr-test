@@ -1,49 +1,24 @@
 <template>
   <div v-if="department" class="container">
-    <h2 class="title">Отдел: {{ department.name }}</h2>
-    <div class="info">
-      <p><strong>Организация:</strong>
-        <router-link
-            v-if="organization"
-            :to="'/organization/' + department.organization_ID"
-            class="link"
-        >
-          {{ organization.name }}
-        </router-link>
-      </p>
+    <h2 class="title-center">Отдел: {{ department.name }}</h2>
 
-      <p><strong>Родительский департамент:</strong>
-        <router-link
-            v-if="parentDepartment"
-            :to="'/department/' + department.parent_ID"
-            class="link"
-        >
-          {{ parentDepartment.name }}
-        </router-link>
-        <span v-else>—</span>
-      </p>
+    <EntityInfo :info="info" />
 
-      <p><strong>Название:</strong> {{ department.name }}</p>
-      <p><strong>Комментарий:</strong> {{ department.comment }}</p>
-    </div>
-
-    <router-link
-        :to="'/department/' + department.DepartmentID + '/edit'"
-        class="button"
-    >
-      Редактировать
-    </router-link>
+    <EditButton :to="`/department/${department.DepartmentID}/edit`" />
   </div>
-  <div v-else class="loading">Загрузка...</div>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, computed} from 'vue';
 import { useRoute } from 'vue-router';
 import { getDepartmentById } from '@/api/departmentsApi';
 import { getOrganizationById } from '@/api/organizationsApi';
 
+import EntityInfo from '@/components/ui/info.vue';
+import EditButton from '@/components/ui/linkButton.vue';
+
 export default {
+  components: { EntityInfo, EditButton },
   setup() {
     const department = ref(null);
     const organization = ref(null);
@@ -53,7 +28,6 @@ export default {
     onMounted(async () => {
       try {
         const { id } = route.params;
-
         const deptRes = await getDepartmentById(id);
         department.value = deptRes.data;
 
@@ -71,79 +45,18 @@ export default {
       }
     });
 
-    return {
-      department,
-      organization,
-      parentDepartment
-    };
+    const info = computed(() => ({
+      'Организация': organization.value
+          ? { label: organization.value.name, to: `/organization/${organization.value.OrganizationID}` }
+          : '—',
+      'Родительский департамент': parentDepartment.value
+          ? { label: parentDepartment.value.name, to: `/department/${parentDepartment.value.DepartmentID}` }
+          : '—',
+      'Название': department.value?.name,
+      'Комментарий': department.value?.comment
+    }));
+
+    return { department, info };
   }
 };
 </script>
-
-
-<style scoped>
-.container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 20px;
-  background: #f9f9f9;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  text-align: center;
-}
-
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 16px;
-  color: #333;
-}
-
-.info {
-  margin-top: 20px;
-  font-size: 16px;
-  color: #555;
-  text-align: left;
-}
-
-.info p {
-  margin-bottom: 10px;
-}
-
-strong {
-  color: #2b5179;
-}
-
-.link {
-  color: #2b5179;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.link:hover {
-  text-decoration: underline;
-}
-
-.button {
-  display: inline-block;
-  background: #2b5179;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  text-decoration: none;
-  margin-top: 20px;
-  font-weight: bold;
-  transition: background 0.3s ease;
-}
-
-.button:hover {
-  background: #2b5179;
-}
-
-.loading {
-  text-align: center;
-  color: #888;
-  font-size: 18px;
-  margin-top: 20px;
-}
-</style>

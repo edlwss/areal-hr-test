@@ -5,6 +5,7 @@
     <router-link to="/positions">Должности</router-link>
     <router-link to="/departments">Отделы</router-link>
     <router-link to="/workers">Работники</router-link>
+    <router-link to="/changes">История изменений</router-link>
   </nav>
 </template>
 

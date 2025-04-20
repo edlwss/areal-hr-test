@@ -10,6 +10,7 @@ const workersRoutes = require('./routes/workersRoutes');
 const actionsRoutes = require("./routes/actionsRoutes");
 const hrOperationRoutes = require("./routes/hrOperationRoutes");
 const documentsRoutes = require('./routes/documentsRoutes');
+const changeLoggerRouted =require('./routes/changeLoggerRoutes');
 const cors = require('cors');
 
 const app = express();
@@ -22,6 +23,7 @@ app.use('/api', workersRoutes);
 app.use('/api', actionsRoutes);
 app.use('/api', hrOperationRoutes);
 app.use('/api', documentsRoutes);
+app.use('/api', changeLoggerRouted);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads/documents')));
 
 const PORT = process.env.PORT;

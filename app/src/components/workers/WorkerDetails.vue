@@ -1,6 +1,6 @@
 <template>
   <div class="container" v-if="worker">
-    <h2 class="text-xl font-bold mb-4">Информация о работнике</h2>
+    <h2 class="title-center">Информация о работнике</h2>
 
     <router-link :to="`/worker/${worker.WorkerID}/hr-operation/create`" class="btn btn-edit mt-4">
       Создать HR Операцию
@@ -9,27 +9,16 @@
       История HR
     </router-link>
 
-    <p><strong>Фамилия:</strong> {{ worker.surname }}</p>
-    <p><strong>Имя:</strong> {{ worker.name }}</p>
-    <p><strong>Отчество:</strong> {{ worker.middlename || '-' }}</p>
-    <p><strong>Дата рождения:</strong> {{ formatDate(worker.birth_date) }}</p>
+    <Info :info="workerInfo" />
 
     <h3 class="section-title">Паспортные данные</h3>
-    <p><strong>Серия и номер:</strong> {{ worker.passport_series }} {{ worker.passport_number }}</p>
-    <p><strong>Дата выдачи:</strong> {{ formatDate(worker.data_of_issue) }}</p>
-    <p><strong>Код подразделения:</strong> {{ worker.unit_code }}</p>
-    <p><strong>Кем выдан:</strong> {{ worker.issued_by_whom }}</p>
+    <Info :info="passportInfo" />
 
     <h3 class="section-title">Адрес</h3>
-    <p><strong>Регион:</strong> {{ worker.regin }}</p>
-    <p><strong>Населённый пункт:</strong> {{ worker.localities }}</p>
-    <p><strong>Улица:</strong> {{ worker.street }}</p>
-    <p><strong>Дом:</strong> {{ worker.house }}</p>
-    <p><strong>Корпус:</strong> {{ worker.building || '-' }}</p>
-    <p><strong>Квартира:</strong> {{ worker.apartment || '-' }}</p>
+    <Info :info="addressInfo" />
 
     <router-link to="/workers" class="btn btn-edit mt-4">Назад</router-link>
-    <router-link :to="`/worker/${worker.WorkerID}/edit`" class="btn btn-edit mt-4">Изменить</router-link>
+    <EditButton :to="`/worker/${worker.WorkerID}/edit`" />
 
     <h3 class="section-title">Документы</h3>
     <ul v-if="documents.length">
@@ -50,64 +39,90 @@
 </template>
 
 <script setup>
-    import {ref, onMounted} from 'vue';
-    import {useRoute} from 'vue-router';
-    import {getWorkerById} from '@/api/workersApi';
-    import {getDocumentsByWorkerId, deleteDocument, uploadDocument} from '@/api/documentApi';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { getWorkerById } from '@/api/workersApi';
+import { getDocumentsByWorkerId, deleteDocument, uploadDocument } from '@/api/documentApi';
+import Info from '@/components/ui/info.vue';
+import EditButton from '@/components/ui/linkButton.vue';
 
-    const route = useRoute();
-    const worker = ref(null);
-    const documents = ref([]);
-    const name = ref('');
-    const file = ref(null);
+const route = useRoute();
+const worker = ref(null);
+const documents = ref([]);
+const name = ref('');
+const file = ref(null);
 
-    onMounted(async () => {
-      const res = await getWorkerById(route.params.id);
-      worker.value = res.data;
+const workerInfo = ref({});
+const passportInfo = ref({});
+const addressInfo = ref({});
+
+onMounted(async () => {
+  const res = await getWorkerById(route.params.id);
+  worker.value = res.data;
+  workerInfo.value = {
+    'Фамилия': worker.value.surname,
+    'Имя': worker.value.name,
+    'Отчество': worker.value.middlename || '—',
+    'Дата рождения': formatDate(worker.value.birth_date),
+  };
+  passportInfo.value = {
+    'Серия и номер': `${worker.value.passport_series} ${worker.value.passport_number}`,
+    'Дата выдачи': formatDate(worker.value.data_of_issue),
+    'Код подразделения': worker.value.unit_code,
+    'Кем выдан': worker.value.issued_by_whom,
+  };
+  addressInfo.value = {
+    'Регион': worker.value.regin,
+    'Населённый пункт': worker.value.localities,
+    'Улица': worker.value.street,
+    'Дом': worker.value.house,
+    'Корпус': worker.value.building || '—',
+    'Квартира': worker.value.apartment || '—',
+  };
+  await loadDocuments();
+});
+
+const loadDocuments = async () => {
+  const res = await getDocumentsByWorkerId(route.params.id);
+  documents.value = res.data || [];
+};
+
+const onFileChange = (e) => {
+  file.value = e.target.files[0];
+};
+
+const onUpload = async () => {
+  if (!file.value || !name.value) return;
+  const formData = new FormData();
+  formData.append('worker_ID', route.params.id);
+  formData.append('name', name.value);
+  formData.append('file', file.value);
+  try {
+    await uploadDocument(formData);
+    await loadDocuments();
+    name.value = '';
+    file.value = null;
+  } catch (err) {
+    console.error('Ошибка при загрузке документа:', err);
+  }
+};
+
+const onDelete = async (id) => {
+  if (confirm('Удалить документ?')) {
+    try {
+      await deleteDocument(id);
       await loadDocuments();
-    });
+    } catch (err) {
+      console.error('Ошибка при удалении документа:', err);
+    }
+  }
+};
 
-    const loadDocuments = async () => {
-      const res = await getDocumentsByWorkerId(route.params.id);
-      documents.value = res.data || [];
-    };
-
-    const onFileChange = (e) => {
-      file.value = e.target.files[0];
-    };
-
-    const onUpload = async () => {
-      if (!file.value || !name.value) return;
-      const formData = new FormData();
-      formData.append('worker_ID', route.params.id);
-      formData.append('name', name.value);
-      formData.append('file', file.value);
-      try {
-        await uploadDocument(formData);
-        await loadDocuments();
-        name.value = '';
-        file.value = null;
-      } catch (err) {
-        console.error('Ошибка при загрузке документа:', err);
-      }
-    };
-
-    const onDelete = async (id) => {
-      if (confirm('Удалить документ?')) {
-        try {
-          await deleteDocument(id);
-          await loadDocuments();
-        } catch (err) {
-          console.error('Ошибка при удалении документа:', err);
-        }
-      }
-    };
-
-    const formatDate = (isoString) => {
-      if (!isoString) return '-';
-      const date = new Date(isoString);
-      return date.toLocaleDateString('ru-RU');
-    };
+const formatDate = (isoString) => {
+  if (!isoString) return '—';
+  const date = new Date(isoString);
+  return date.toLocaleDateString('ru-RU');
+};
 </script>
 
 <style scoped>
@@ -123,20 +138,6 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 20px;
-  background: #ffffff;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
-
-h2 {
-  text-align: center;
-  color: #333;
 }
 
 .section-title {
@@ -173,4 +174,5 @@ p {
 .btn:hover {
   opacity: 0.8;
 }
+
 </style>

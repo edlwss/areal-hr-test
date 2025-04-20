@@ -7,6 +7,7 @@
         <router-link to="/departments" class="menu-item">Департаменты</router-link>
         <router-link to="/positions" class="menu-item">Должности</router-link>
         <router-link to="/workers" class="menu-item">Работники</router-link>
+        <router-link to="/changes" class="menu-item">История изменений</router-link>
       </div>
     </div>
   </div>

@@ -5,6 +5,7 @@ import OrganizationsPage from "@/pages/OrganizationsPage.vue";
 import PositionsPage from "@/pages/PositionsPage.vue";
 import WorkersPage from "@/pages/WorkersPage.vue";
 import HrOperation from "@/pages/hrOperationsPage.vue";
+import ChangeLoggerPage from "@/components/ChangeLoggerHistory.vue";
 
 const routes = [
     { path: '/', component: Home },
@@ -30,7 +31,9 @@ const routes = [
     { path: '/worker/:id/edit', component: WorkersPage, name: 'worker-edit', meta: { component: 'EditWorker', title: 'Редактирование работника' }},
 
     { path: '/worker/:workerId/hr-operation/create', component: HrOperation, meta: {component: 'HrOperationForm', title: 'Создание HR-операции'}},
-    {path: '/worker/:workerId/hr-history', component: HrOperation, meta: {component: 'WorkerHrHistory', title: 'История HR-операции'}}
+    {path: '/worker/:workerId/hr-history', component: HrOperation, meta: {component: 'WorkerHrHistory', title: 'История HR-операции'}},
+
+    { path: '/changes', component: ChangeLoggerPage, name: 'change-log', meta: { title: 'История изменений', component: 'ChangeLoggerPage' }}
 
 ];
 
