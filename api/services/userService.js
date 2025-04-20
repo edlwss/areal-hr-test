@@ -45,15 +45,15 @@ class UserService {
         const oldData = oldRows[0];
         if (!oldData) return null;
 
-        const { login, password, role_ID, surname, name, middlename } = data;
+        const { role_ID, surname, name, middlename } = data;
         const query = `
             UPDATE users
-            SET login = $1, password = $2, role_ID = $3,
-                surname = $4, name = $5, middlename = $6,
+            SET "role_ID" = $1,
+                surname = $2, name = $3, middlename = $4,
                 updated_at = CURRENT_TIMESTAMP
-            WHERE "UserID" = $7 AND deleted_at IS NULL
+            WHERE "UserID" = $5 AND deleted_at IS NULL
             RETURNING *`;
-        const values = [login, password, role_ID, surname, name, middlename, id];
+        const values = [ role_ID, surname, name, middlename, id];
         const { rows } = await pool.query(query, values);
         const updated = rows[0];
 
@@ -92,8 +92,6 @@ class UserService {
 
 function extractFields(data) {
     return {
-        login: data.login,
-        password: data.password,
         role_ID: data.role_ID,
         surname: data.surname,
         name: data.name,

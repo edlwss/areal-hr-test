@@ -10,16 +10,16 @@
 import Navbar from '@/components/Navbar.vue';
 import UsersTable from '@/components/users/UsersTable.vue';
 import CreateUser from '@/components/users/CreateUser.vue';
-// import EditUser from '@/components/users/EditUser.vue';
-// import UserDetails from '@/components/users/UserDetails.vue';
+import EditUser from '@/components/users/EditUser.vue';
+import UserDetails from '@/components/users/UserDetails.vue';
 
 export default {
   components: {
     Navbar,
     UsersTable,
     CreateUser,
-    // EditUser,
-    // UserDetails
+    EditUser,
+    UserDetails
   },
   computed: {
     currentComponent() {

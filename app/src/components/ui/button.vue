@@ -2,7 +2,6 @@
   <button
       :class="['btn', type]"
       :style="{ backgroundColor: color, fontSize: size }"
-      @click="$emit('click')"
   >
     <slot></slot>
   </button>

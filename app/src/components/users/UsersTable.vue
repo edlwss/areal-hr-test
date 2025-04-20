@@ -52,19 +52,20 @@ export default {
     }
   },
   methods: {
-    async deleteUser(id) {
+    async deleteUser(event, id) {
+      event.preventDefault();
       if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
         try {
           await deleteUser(id);
-          this.users = this.users.filter((u) => u.UserID !== id);
+          this.users = this.users.filter(user => user.UserID !== id);
         } catch (error) {
           console.error('Ошибка при удалении пользователя:', error);
         }
       }
     },
     formatFIO(user) {
-      return [user.surname, user.name, user.middlename].filter(Boolean).join(' ');
-    },
+      return `${user.surname} ${user.name} ${user.middlename || ''}`.trim();
+    }
   },
 };
 </script>

@@ -37,8 +37,9 @@ const routes = [
     { path: '/changes', component: ChangeLoggerPage, name: 'change-log', meta: { title: 'История изменений', component: 'ChangeLoggerPage' }},
 
    { path: '/user/new', component: UsersPage, name: 'user-create', meta: { title: 'Создание пользователя', component: 'CreateUser' }},
-    { path: '/users', component: UsersPage, name: 'users', meta: { title: 'Список пользователей', component: 'UsersTable' }},
-    // { path: '/user/:id', component: UsersPage, name: 'user-details', meta: { title: 'Детали пользователя', component: 'UserDetails' }}
+   { path: '/users', component: UsersPage, name: 'users', meta: { title: 'Список пользователей', component: 'UsersTable' }},
+   { path: '/user/:id', component: UsersPage, name: 'user-details', meta: { title: 'Детали пользователя', component: 'UserDetails' }},
+    { path: '/user/:id/edit', component: UsersPage, name: 'user-edit', meta: { title: 'Изменения данных пользователя', component: 'EditUser' }}
 ];
 
 const router = createRouter({
