@@ -5,6 +5,7 @@ import OrganizationsPage from "@/pages/OrganizationsPage.vue";
 import PositionsPage from "@/pages/PositionsPage.vue";
 import WorkersPage from "@/pages/WorkersPage.vue";
 import HrOperation from "@/pages/hrOperationsPage.vue";
+import UsersPage from "@/pages/UserPage.vue";
 import ChangeLoggerPage from "@/components/ChangeLoggerHistory.vue";
 
 const routes = [
@@ -33,8 +34,11 @@ const routes = [
     { path: '/worker/:workerId/hr-operation/create', component: HrOperation, meta: {component: 'HrOperationForm', title: 'Создание HR-операции'}},
     {path: '/worker/:workerId/hr-history', component: HrOperation, meta: {component: 'WorkerHrHistory', title: 'История HR-операции'}},
 
-    { path: '/changes', component: ChangeLoggerPage, name: 'change-log', meta: { title: 'История изменений', component: 'ChangeLoggerPage' }}
+    { path: '/changes', component: ChangeLoggerPage, name: 'change-log', meta: { title: 'История изменений', component: 'ChangeLoggerPage' }},
 
+   { path: '/user/new', component: UsersPage, name: 'user-create', meta: { title: 'Создание пользователя', component: 'CreateUser' }},
+    { path: '/users', component: UsersPage, name: 'users', meta: { title: 'Список пользователей', component: 'UsersTable' }},
+    // { path: '/user/:id', component: UsersPage, name: 'user-details', meta: { title: 'Детали пользователя', component: 'UserDetails' }}
 ];
 
 const router = createRouter({

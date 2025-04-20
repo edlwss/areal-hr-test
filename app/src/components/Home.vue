@@ -8,6 +8,7 @@
         <router-link to="/positions" class="menu-item">Должности</router-link>
         <router-link to="/workers" class="menu-item">Работники</router-link>
         <router-link to="/changes" class="menu-item">История изменений</router-link>
+        <router-link to="/users" class="menu-item">Просмотр пользователя</router-link>
       </div>
     </div>
   </div>

@@ -11,6 +11,8 @@ const actionsRoutes = require("./routes/actionsRoutes");
 const hrOperationRoutes = require("./routes/hrOperationRoutes");
 const documentsRoutes = require('./routes/documentsRoutes');
 const changeLoggerRouted =require('./routes/changeLoggerRoutes');
+const userRoutes = require('./routes/userRoutes');
+const rolesRoutes = require('./routes/rolesRoutes');
 const cors = require('cors');
 
 const app = express();
@@ -24,6 +26,8 @@ app.use('/api', actionsRoutes);
 app.use('/api', hrOperationRoutes);
 app.use('/api', documentsRoutes);
 app.use('/api', changeLoggerRouted);
+app.use('/api', userRoutes);
+app.use('/api', rolesRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads/documents')));
 
 const PORT = process.env.PORT;
