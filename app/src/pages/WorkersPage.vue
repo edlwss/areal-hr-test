@@ -19,7 +19,7 @@ export default {
     WorkersTable,
     WorkerDetails,
     EditWorker,
-    CreateWorker
+    CreateWorker,
   },
   computed: {
     currentComponent() {
@@ -27,7 +27,7 @@ export default {
     },
     pageTitle() {
       return this.$route.meta.title || 'Список работников';
-    }
-  }
+    },
+  },
 };
 </script>

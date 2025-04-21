@@ -57,7 +57,7 @@ export default {
       if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
         try {
           await deleteUser(id);
-          this.users = this.users.filter(user => user.UserID !== id);
+          this.users = this.users.filter((user) => user.UserID !== id);
         } catch (error) {
           console.error('Ошибка при удалении пользователя:', error);
         }
@@ -65,7 +65,7 @@ export default {
     },
     formatFIO(user) {
       return `${user.surname} ${user.name} ${user.middlename || ''}`.trim();
-    }
+    },
   },
 };
 </script>

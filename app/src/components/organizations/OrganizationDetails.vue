@@ -6,7 +6,6 @@
 
     <EditButton :to="`/organization/${organization.OrganizationID}/edit`" />
   </div>
-
 </template>
 
 <script>
@@ -18,7 +17,7 @@ import EntityInfo from '@/components/ui/info.vue';
 import EditButton from '@/components/ui/linkButton.vue';
 
 export default {
-  components: { EntityInfo, EditButton},
+  components: { EntityInfo, EditButton },
   setup() {
     const organization = ref(null);
     const route = useRoute();
@@ -33,11 +32,11 @@ export default {
     });
 
     const info = computed(() => ({
-      'Наименование': organization.value?.name,
-      'Комментарий': organization.value?.comment
+      Наименование: organization.value?.name,
+      Комментарий: organization.value?.comment,
     }));
 
     return { organization, info };
-  }
+  },
 };
 </script>

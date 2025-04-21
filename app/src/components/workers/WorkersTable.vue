@@ -39,8 +39,8 @@ export default {
   },
   computed: {
     filteredWorkers() {
-      return this.workers.filter(w => !w.deleted_at);
-    }
+      return this.workers.filter((w) => !w.deleted_at);
+    },
   },
   async mounted() {
     try {
@@ -55,12 +55,12 @@ export default {
       if (confirm('Удалить работника?')) {
         try {
           await apiDeleteWorker(id);
-          this.workers = this.workers.filter(w => w.WorkerID !== id);
+          this.workers = this.workers.filter((w) => w.WorkerID !== id);
         } catch (error) {
           console.error('Ошибка при удалении работника:', error);
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>

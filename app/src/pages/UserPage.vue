@@ -19,7 +19,7 @@ export default {
     UsersTable,
     CreateUser,
     EditUser,
-    UserDetails
+    UserDetails,
   },
   computed: {
     currentComponent() {
@@ -27,7 +27,7 @@ export default {
     },
     pageTitle() {
       return this.$route.meta.title || 'Список пользователей';
-    }
-  }
+    },
+  },
 };
 </script>

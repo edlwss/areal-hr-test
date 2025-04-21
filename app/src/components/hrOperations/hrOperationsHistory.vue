@@ -45,7 +45,7 @@ const workerName = ref('');
 const fetchData = async () => {
   const [opRes, workerRes] = await Promise.all([
     getWorkerHrOperations(workerId),
-    getWorkerById(workerId)
+    getWorkerById(workerId),
   ]);
 
   operations.value = opRes.data;
@@ -55,7 +55,7 @@ const fetchData = async () => {
 const deleteOperation = async (id) => {
   if (confirm('Удалить эту операцию?')) {
     await deleteHrOperation(id);
-    operations.value = operations.value.filter(op => op.HrOperationID !== id);
+    operations.value = operations.value.filter((op) => op.HrOperationID !== id);
   }
 };
 

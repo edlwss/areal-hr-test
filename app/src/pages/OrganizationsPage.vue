@@ -19,7 +19,7 @@ export default {
     OrganizationsTable,
     OrganizationDetails,
     EditOrganization,
-    CreateOrganization
+    CreateOrganization,
   },
   computed: {
     currentComponent() {
@@ -27,7 +27,7 @@ export default {
     },
     pageTitle() {
       return this.$route.meta.title || 'Список организаций';
-    }
-  }
+    },
+  },
 };
 </script>

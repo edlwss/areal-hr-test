@@ -2,10 +2,10 @@
   <div>
     <table class="table" v-if="items && items.length">
       <thead>
-      <slot name="thead" />
+        <slot name="thead" />
       </thead>
       <tbody>
-      <slot name="tbody" />
+        <slot name="tbody" />
       </tbody>
     </table>
     <EmptyState v-else :message="emptyMessage" />
@@ -21,11 +21,11 @@ export default {
     items: Array,
     emptyMessage: {
       type: String,
-      default: 'Нет данных для отображения'
-    }
+      default: 'Нет данных для отображения',
+    },
   },
   components: {
-    EmptyState
-  }
-}
+    EmptyState,
+  },
+};
 </script>

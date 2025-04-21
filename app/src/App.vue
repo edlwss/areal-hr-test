@@ -4,7 +4,6 @@
   </div>
 </template>
 
-
 <script>
 import Home from './components/Home.vue';
 
@@ -15,6 +14,4 @@ export default {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -6,4 +6,3 @@ import '@/assets/styles/global.scss';
 const app = createApp(App);
 app.use(route);
 app.mount('#app');
-

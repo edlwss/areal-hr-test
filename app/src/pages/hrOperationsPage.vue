@@ -15,7 +15,7 @@ export default {
   components: {
     Navbar,
     HrOperationForm,
-    WorkerHrHistory
+    WorkerHrHistory,
   },
   computed: {
     currentComponent() {
@@ -23,8 +23,7 @@ export default {
     },
     pageTitle() {
       return this.$route.meta.title || 'Управление HR операциями';
-    }
-  }
+    },
+  },
 };
 </script>
-

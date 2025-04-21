@@ -34,7 +34,7 @@ import BaseButton from '@/components/ui/button.vue';
 import '@/assets/styles/table.css';
 
 export default {
-  components: {TableWrapper, BaseButton},
+  components: { TableWrapper, BaseButton },
   setup() {
     const positions = ref([]);
 
@@ -46,11 +46,11 @@ export default {
     const remove = async (id) => {
       if (confirm('Вы уверены, что хотите удалить эту позицию?')) {
         await deletePosition(id);
-        positions.value = positions.value.filter(p => p.PositionID !== id);
+        positions.value = positions.value.filter((p) => p.PositionID !== id);
       }
     };
 
-    return {positions, remove};
-  }
+    return { positions, remove };
+  },
 };
 </script>

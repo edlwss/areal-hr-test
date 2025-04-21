@@ -40,9 +40,9 @@ export default {
 
     return {
       position,
-      save
+      save,
     };
-  }
+  },
 };
 </script>
 

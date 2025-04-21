@@ -61,12 +61,11 @@ export default {
       name,
       comment,
       errors,
-      submit
+      submit,
     };
-  }
+  },
 };
 </script>
-
 
 <style scoped>
 .error-text {

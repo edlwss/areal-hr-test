@@ -30,9 +30,9 @@ export default {
 
     return {
       position,
-      submit
+      submit,
     };
-  }
+  },
 };
 </script>
 

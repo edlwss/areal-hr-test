@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import {ref, onMounted, computed} from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { getDepartmentById } from '@/api/departmentsApi';
 import { getOrganizationById } from '@/api/organizationsApi';
@@ -46,17 +46,23 @@ export default {
     });
 
     const info = computed(() => ({
-      'Организация': organization.value
-          ? { label: organization.value.name, to: `/organization/${organization.value.OrganizationID}` }
-          : '—',
+      Организация: organization.value
+        ? {
+            label: organization.value.name,
+            to: `/organization/${organization.value.OrganizationID}`,
+          }
+        : '—',
       'Родительский департамент': parentDepartment.value
-          ? { label: parentDepartment.value.name, to: `/department/${parentDepartment.value.DepartmentID}` }
-          : '—',
-      'Название': department.value?.name,
-      'Комментарий': department.value?.comment
+        ? {
+            label: parentDepartment.value.name,
+            to: `/department/${parentDepartment.value.DepartmentID}`,
+          }
+        : '—',
+      Название: department.value?.name,
+      Комментарий: department.value?.comment,
     }));
 
     return { department, info };
-  }
+  },
 };
 </script>

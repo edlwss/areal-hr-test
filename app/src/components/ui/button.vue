@@ -1,8 +1,5 @@
 <template>
-  <button
-      :class="['btn', type]"
-      :style="{ backgroundColor: color, fontSize: size }"
-  >
+  <button :class="['btn', type]" :style="{ backgroundColor: color, fontSize: size }">
     <slot></slot>
   </button>
 </template>

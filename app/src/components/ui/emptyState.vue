@@ -10,10 +10,10 @@ export default {
   props: {
     message: {
       type: String,
-      default: 'Данные отсутствуют'
-    }
-  }
-}
+      default: 'Данные отсутствуют',
+    },
+  },
+};
 </script>
 
 <style scoped>

@@ -22,9 +22,9 @@
           </td>
           <td>
             <router-link
-                v-if="organizations[dept.organization_ID]"
-                :to="`/organization/${dept.organization_ID}`"
-                class="link"
+              v-if="organizations[dept.organization_ID]"
+              :to="`/organization/${dept.organization_ID}`"
+              class="link"
             >
               {{ organizations[dept.organization_ID] }}
             </router-link>
@@ -32,9 +32,9 @@
           </td>
           <td>
             <router-link
-                v-if="dept.parent_ID && parentDepartments[dept.parent_ID]"
-                :to="`/department/${dept.parent_ID}`"
-                class="link"
+              v-if="dept.parent_ID && parentDepartments[dept.parent_ID]"
+              :to="`/department/${dept.parent_ID}`"
+              class="link"
             >
               {{ parentDepartments[dept.parent_ID] }}
             </router-link>
@@ -67,10 +67,7 @@ export default {
 
     onMounted(async () => {
       try {
-        const [deptRes, orgRes] = await Promise.all([
-          getDepartments(),
-          getOrganizations(),
-        ]);
+        const [deptRes, orgRes] = await Promise.all([getDepartments(), getOrganizations()]);
 
         departments.value = deptRes.data;
         organizations.value = orgRes.data.reduce((acc, org) => {

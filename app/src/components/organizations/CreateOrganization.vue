@@ -32,7 +32,7 @@ export default {
       try {
         await createOrganization({
           name: name.value,
-          comment: comment.value
+          comment: comment.value,
         });
         await router.push('/organizations');
       } catch (error) {
@@ -51,9 +51,9 @@ export default {
       name,
       comment,
       errors,
-      submit
+      submit,
     };
-  }
+  },
 };
 </script>
 

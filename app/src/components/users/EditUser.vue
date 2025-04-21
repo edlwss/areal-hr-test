@@ -2,7 +2,6 @@
   <div class="form-container">
     <h2 class="form-title">Редактирование пользователя</h2>
     <form @submit.prevent="submit" class="form">
-
       <label class="form-label">Фамилия</label>
       <input v-model="surname" class="form-input" />
       <p v-if="errors.surname" class="error-text">{{ errors.surname }}</p>

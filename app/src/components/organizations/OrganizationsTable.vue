@@ -35,7 +35,7 @@ import BaseButton from '@/components/ui/button.vue';
 import '@/assets/styles/table.css';
 
 export default {
-  components: {TableWrapper, BaseButton},
+  components: { TableWrapper, BaseButton },
   data() {
     return {
       organizations: [],
@@ -54,9 +54,7 @@ export default {
       if (confirm('Вы уверены, что хотите удалить эту организацию?')) {
         try {
           await deleteOrganization(id);
-          this.organizations = this.organizations.filter(
-              (org) => org.OrganizationID !== id
-          );
+          this.organizations = this.organizations.filter((org) => org.OrganizationID !== id);
         } catch (error) {
           console.error('Ошибка при удалении организации:', error);
         }

@@ -48,7 +48,10 @@
   text-decoration: none;
   color: #2b5179;
   font-weight: 600;
-  transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
   display: block;
   text-align: center;
   width: 100%;
@@ -64,5 +67,4 @@
   transform: scale(1);
 }
 </style>
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>

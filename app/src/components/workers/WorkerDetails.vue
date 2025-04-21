@@ -24,7 +24,12 @@
     <ul v-if="documents.length">
       <li v-for="doc in documents" :key="doc.DocumentID" class="doc-item">
         {{ doc.name }}
-        <a :href="`http://localhost:3010/api/document/download/${doc.file}`" target="_blank" class="btn btn-edit ml-2">Скачать</a>
+        <a
+          :href="`http://localhost:3010/api/document/download/${doc.file}`"
+          target="_blank"
+          class="btn btn-edit ml-2"
+          >Скачать</a
+        >
         <button @click="onDelete(doc.DocumentID)" class="btn btn-delete ml-2">✕</button>
       </li>
     </ul>
@@ -60,9 +65,9 @@ onMounted(async () => {
   const res = await getWorkerById(route.params.id);
   worker.value = res.data;
   workerInfo.value = {
-    'Фамилия': worker.value.surname,
-    'Имя': worker.value.name,
-    'Отчество': worker.value.middlename || '—',
+    Фамилия: worker.value.surname,
+    Имя: worker.value.name,
+    Отчество: worker.value.middlename || '—',
     'Дата рождения': formatDate(worker.value.birth_date),
   };
   passportInfo.value = {
@@ -72,12 +77,12 @@ onMounted(async () => {
     'Кем выдан': worker.value.issued_by_whom,
   };
   addressInfo.value = {
-    'Регион': worker.value.regin,
+    Регион: worker.value.regin,
     'Населённый пункт': worker.value.localities,
-    'Улица': worker.value.street,
-    'Дом': worker.value.house,
-    'Корпус': worker.value.building || '—',
-    'Квартира': worker.value.apartment || '—',
+    Улица: worker.value.street,
+    Дом: worker.value.house,
+    Корпус: worker.value.building || '—',
+    Квартира: worker.value.apartment || '—',
   };
   await loadDocuments();
 });
@@ -174,5 +179,4 @@ p {
 .btn:hover {
   opacity: 0.8;
 }
-
 </style>

@@ -50,10 +50,7 @@ export default {
 
     onMounted(async () => {
       try {
-        const [orgRes, deptRes] = await Promise.all([
-          getOrganizations(),
-          getDepartments()
-        ]);
+        const [orgRes, deptRes] = await Promise.all([getOrganizations(), getDepartments()]);
         organizations.value = orgRes.data;
         departments.value = deptRes.data;
       } catch (error) {
@@ -92,13 +89,11 @@ export default {
       errors,
       submit,
     };
-  }
+  },
 };
 </script>
 
-
 <style scoped>
-
 .error-text {
   color: red;
   font-size: 0.9rem;

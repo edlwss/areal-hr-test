@@ -19,7 +19,7 @@ export default {
     PositionsTable,
     PositionDetails,
     CreatePosition,
-    EditPosition
+    EditPosition,
   },
   computed: {
     currentComponent() {
@@ -27,7 +27,7 @@ export default {
     },
     pageTitle() {
       return this.$route.meta.title || 'Список должностей';
-    }
-  }
+    },
+  },
 };
 </script>

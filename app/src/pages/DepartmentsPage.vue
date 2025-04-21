@@ -19,7 +19,7 @@ export default {
     DepartmentsTable,
     DepartmentDetails,
     CreateDepartment,
-    EditDepartment
+    EditDepartment,
   },
   computed: {
     currentComponent() {
@@ -27,7 +27,7 @@ export default {
     },
     pageTitle() {
       return this.$route.meta.title || 'Список департаментов';
-    }
-  }
+    },
+  },
 };
 </script>

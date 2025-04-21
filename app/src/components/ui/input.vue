@@ -1,13 +1,7 @@
 <template>
   <div class="input-wrapper">
     <label :for="id" class="input-label">{{ label }}</label>
-    <input
-        :id="id"
-        v-bind="$attrs"
-        v-model="modelValue"
-        class="input-field"
-        :type="type"
-    />
+    <input :id="id" v-bind="$attrs" v-model="modelValue" class="input-field" :type="type" />
   </div>
 </template>
 

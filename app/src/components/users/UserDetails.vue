@@ -32,12 +32,12 @@ export default {
     });
 
     const info = computed(() => ({
-      'ФИО': `${user.value?.surname} ${user.value?.name} ${user.value?.middlename || ''}`,
-      'Роль': user.value?.role_ID,
-      'Login': user.value?.login
+      ФИО: `${user.value?.surname} ${user.value?.name} ${user.value?.middlename || ''}`,
+      Роль: user.value?.role_ID,
+      Login: user.value?.login,
     }));
 
     return { user, info };
-  }
+  },
 };
 </script>

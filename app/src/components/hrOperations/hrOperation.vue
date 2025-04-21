@@ -21,7 +21,11 @@
         <label>Должность</label>
         <select v-model="form.position_ID">
           <option value="">-</option>
-          <option v-for="position in positions" :key="position.PositionID" :value="position.PositionID">
+          <option
+            v-for="position in positions"
+            :key="position.PositionID"
+            :value="position.PositionID"
+          >
             {{ position.name }}
           </option>
         </select>
@@ -31,7 +35,11 @@
         <label>Отдел</label>
         <select v-model="form.department_ID">
           <option value="">-</option>
-          <option v-for="department in departments" :key="department.DepartmentID" :value="department.DepartmentID">
+          <option
+            v-for="department in departments"
+            :key="department.DepartmentID"
+            :value="department.DepartmentID"
+          >
             {{ department.name }}
           </option>
         </select>
@@ -68,7 +76,7 @@ const form = ref({
   actionID: '',
   position_ID: null,
   department_ID: null,
-  salary: null
+  salary: null,
 });
 
 const actions = ref([]);
@@ -81,7 +89,7 @@ onMounted(async () => {
     getActions(),
     getPositions(),
     getDepartments(),
-    getWorkerById(workerId)
+    getWorkerById(workerId),
   ]);
 
   actions.value = actionsRes.data;
@@ -99,7 +107,6 @@ const submitForm = async () => {
   }
 };
 </script>
-
 
 <style scoped>
 .form-wrapper {

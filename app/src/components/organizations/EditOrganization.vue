@@ -65,7 +65,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .error-text {
   color: red;

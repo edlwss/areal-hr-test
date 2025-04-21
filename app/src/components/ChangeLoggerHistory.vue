@@ -43,7 +43,7 @@ import '@/assets/styles/table.css';
 import { getChangeHistory } from '@/api/changeLoggerApi.js';
 
 export default {
-  components: {Navbar, TableWrapper },
+  components: { Navbar, TableWrapper },
   setup() {
     const changes = ref([]);
 
@@ -62,7 +62,7 @@ export default {
         try {
           return JSON.parse(changedField);
         } catch (e) {
-          console.error("Ошибка при парсинге JSON:", e);
+          console.error('Ошибка при парсинге JSON:', e);
           return {};
         }
       } else if (typeof changedField === 'object') {
@@ -79,7 +79,7 @@ export default {
     };
 
     return { changes, formatDate, parseChanges, formatChange };
-  }
+  },
 };
 </script>
 

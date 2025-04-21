@@ -7,14 +7,14 @@
 </template>
 
 <script>
-import {ref, onMounted} from 'vue';
-import {useRoute} from 'vue-router';
-import {getPositionById} from '@/api/positionsApi';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { getPositionById } from '@/api/positionsApi';
 import EditButton from '@/components/ui/linkButton.vue';
 
 export default {
   components: {
-    EditButton
+    EditButton,
   },
   setup() {
     const position = ref({});
@@ -30,8 +30,8 @@ export default {
     });
 
     return {
-      position
+      position,
     };
-  }
+  },
 };
 </script>

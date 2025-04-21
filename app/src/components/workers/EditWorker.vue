@@ -11,31 +11,56 @@
         <h3 class="font-semibold mt-4">Паспортные данные</h3>
         <div>
           <input
-              v-model="form.passport.passport_series"
-              placeholder="Серия"
-              required
-              class="input"
-              :class="{ 'invalid': form.passport.passport_series.length !== 4 }"
+            v-model="form.passport.passport_series"
+            placeholder="Серия"
+            required
+            class="input"
+            :class="{ invalid: form.passport.passport_series.length !== 4 }"
           />
-          <p v-if="form.passport.passport_series.length !== 4" class="error">Серия должна содержать 4 цифры</p>
+          <p v-if="form.passport.passport_series.length !== 4" class="error">
+            Серия должна содержать 4 цифры
+          </p>
         </div>
         <div>
           <input
-              v-model="form.passport.passport_number"
-              placeholder="Номер"
-              required
-              class="input"
-              :class="{ 'invalid': form.passport.passport_number.length !== 6 }"
+            v-model="form.passport.passport_number"
+            placeholder="Номер"
+            required
+            class="input"
+            :class="{ invalid: form.passport.passport_number.length !== 6 }"
           />
-          <p v-if="form.passport.passport_number.length !== 6" class="error">Номер должен содержать 6 цифр</p>
+          <p v-if="form.passport.passport_number.length !== 6" class="error">
+            Номер должен содержать 6 цифр
+          </p>
         </div>
-        <input v-model="form.passport.data_of_issue" type="date" placeholder="Дата выдачи" required class="input" />
-        <input v-model="form.passport.unit_code" placeholder="Код подразделения" required class="input" />
-        <input v-model="form.passport.issued_by_whom" placeholder="Кем выдано" required class="input" />
+        <input
+          v-model="form.passport.data_of_issue"
+          type="date"
+          placeholder="Дата выдачи"
+          required
+          class="input"
+        />
+        <input
+          v-model="form.passport.unit_code"
+          placeholder="Код подразделения"
+          required
+          class="input"
+        />
+        <input
+          v-model="form.passport.issued_by_whom"
+          placeholder="Кем выдано"
+          required
+          class="input"
+        />
 
         <h3 class="font-semibold mt-4">Адрес</h3>
         <input v-model="form.address.regin" placeholder="Регион" required class="input" />
-        <input v-model="form.address.localities" placeholder="Населённый пункт" required class="input" />
+        <input
+          v-model="form.address.localities"
+          placeholder="Населённый пункт"
+          required
+          class="input"
+        />
         <input v-model="form.address.street" placeholder="Улица" required class="input" />
         <input v-model="form.address.house" placeholder="Дом" required class="input" />
         <input v-model="form.address.building" placeholder="Корпус" class="input" />
@@ -55,7 +80,7 @@ import { getWorkerById, updateWorker } from '@/api/workersApi';
 const route = useRoute();
 const router = useRouter();
 
-const formatDate = date => date?.split('T')[0] || '';
+const formatDate = (date) => date?.split('T')[0] || '';
 
 const form = ref({
   surname: '',
@@ -67,7 +92,7 @@ const form = ref({
     passport_number: '',
     data_of_issue: '',
     unit_code: '',
-    issued_by_whom: ''
+    issued_by_whom: '',
   },
   address: {
     regin: '',
@@ -75,8 +100,8 @@ const form = ref({
     street: '',
     house: '',
     building: '',
-    apartment: ''
-  }
+    apartment: '',
+  },
 });
 
 onMounted(async () => {
@@ -93,7 +118,7 @@ onMounted(async () => {
         passport_number: data.passport_number,
         data_of_issue: formatDate(data.data_of_issue),
         unit_code: data.unit_code,
-        issued_by_whom: data.issued_by_whom
+        issued_by_whom: data.issued_by_whom,
       },
       address: {
         regin: data.regin,
@@ -101,8 +126,8 @@ onMounted(async () => {
         street: data.street,
         house: data.house,
         building: data.building,
-        apartment: data.apartment
-      }
+        apartment: data.apartment,
+      },
     };
   } catch (err) {
     console.error('Ошибка при загрузке данных работника:', err);
@@ -111,8 +136,8 @@ onMounted(async () => {
 
 const submit = async () => {
   if (
-      form.value.passport.passport_series.length !== 4 ||
-      form.value.passport.passport_number.length !== 6
+    form.value.passport.passport_series.length !== 4 ||
+    form.value.passport.passport_number.length !== 6
   ) {
     alert('Проверьте серию и номер паспорта');
     return;

@@ -72,7 +72,7 @@ export default {
           surname: surname.value,
           name: name.value,
           middlename: middlename.value,
-          role_ID: parseInt(role_ID.value)
+          role_ID: parseInt(role_ID.value),
         });
         await router.push('/');
       } catch (error) {
@@ -96,9 +96,9 @@ export default {
       role_ID,
       roles,
       errors,
-      submit
+      submit,
     };
-  }
+  },
 };
 </script>
 

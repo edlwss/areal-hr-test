@@ -3,11 +3,7 @@
     <p v-for="(value, label) in info" :key="label">
       <strong>{{ label }}:</strong>
       <span v-if="typeof value !== 'object'">{{ value || '—' }}</span>
-      <router-link
-          v-else
-          :to="value.to"
-          class="link"
-      >
+      <router-link v-else :to="value.to" class="link">
         {{ value.label }}
       </router-link>
     </p>
@@ -17,7 +13,7 @@
 <script>
 export default {
   props: {
-    info: Object
-  }
+    info: Object,
+  },
 };
 </script>
