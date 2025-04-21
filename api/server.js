@@ -7,10 +7,10 @@ const organizationRoutes = require('./routes/organizationRoutes');
 const positionRoutes = require('./routes/positionsRoutes');
 const departmentRoutes = require('./routes/departmentRoutes');
 const workersRoutes = require('./routes/workersRoutes');
-const actionsRoutes = require("./routes/actionsRoutes");
-const hrOperationRoutes = require("./routes/hrOperationRoutes");
+const actionsRoutes = require('./routes/actionsRoutes');
+const hrOperationRoutes = require('./routes/hrOperationRoutes');
 const documentsRoutes = require('./routes/documentsRoutes');
-const changeLoggerRouted =require('./routes/changeLoggerRoutes');
+const changeLoggerRouted = require('./routes/changeLoggerRoutes');
 const userRoutes = require('./routes/userRoutes');
 const rolesRoutes = require('./routes/rolesRoutes');
 const cors = require('cors');
@@ -32,14 +32,14 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads/documents')));
 
 const PORT = process.env.PORT;
 const startServer = async () => {
-    try {
-        await pool.connect();
-        app.listen(PORT, () => {
-            console.log(`Server started at http://localhost:${PORT}`);
-        });
-    } catch (err) {
-        console.error('Error connecting to the database:', err);
-    }
+  try {
+    await pool.connect();
+    app.listen(PORT, () => {
+      console.log(`Server started at http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error('Error connecting to the database:', err);
+  }
 };
 
 startServer();
