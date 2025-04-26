@@ -1,4 +1,5 @@
 <template>
+  <Navbar />
   <div class="home-container">
     <h1 class="title">Главное меню</h1>
     <div class="menu-container">
@@ -67,4 +68,6 @@
   transform: scale(1);
 }
 </style>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Navbar from '@/components/Navbar.vue';
+</script>

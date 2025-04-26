@@ -40,7 +40,7 @@ export default {
         });
 
         // Сохраняем токен
-        localStorage.setItem('token', token);
+        localStorage.setItem('access_token', token);
 
         await router.push('/home');
       } catch (error) {
