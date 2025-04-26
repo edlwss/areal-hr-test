@@ -7,9 +7,15 @@ import WorkersPage from '@/pages/WorkersPage.vue';
 import HrOperation from '@/pages/hrOperationsPage.vue';
 import UsersPage from '@/pages/UserPage.vue';
 import ChangeLoggerPage from '@/components/ChangeLoggerHistory.vue';
+import LoginPage from '@/pages/LoginPage.vue';
 
 const routes = [
-  { path: '/', component: Home },
+  { path: '/home', component: Home },
+
+  {
+    path: '/',
+    component: LoginPage,
+  },
 
   {
     path: '/organizations',

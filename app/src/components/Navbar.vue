@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar">
-    <router-link to="/">Дом</router-link>
+    <router-link to="/home">Дом</router-link>
     <router-link to="/organizations">Организации</router-link>
     <router-link to="/positions">Должности</router-link>
     <router-link to="/departments">Отделы</router-link>
