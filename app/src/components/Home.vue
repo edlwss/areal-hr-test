@@ -9,7 +9,7 @@
         <router-link to="/positions" class="menu-item">Должности</router-link>
         <router-link to="/workers" class="menu-item">Работники</router-link>
         <router-link to="/changes" class="menu-item">История изменений</router-link>
-        <router-link to="/users" class="menu-item">Просмотр пользователя</router-link>
+        <router-link v-if="roleId === 1" to="/users" class="menu-item">Просмотр пользователя</router-link>
       </div>
     </div>
   </div>
@@ -69,5 +69,8 @@
 }
 </style>
 <script setup lang="ts">
-import Navbar from '@/components/Navbar.vue';
+import Navbar from './Navbar.vue';
+import { getUserRole } from './ui/authRole';
+
+const roleId = getUserRole();
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2 class="title-center">Департаменты</h2>
-    <router-link to="/department/new" class="btn-add">Добавить департамент</router-link>
+    <router-link v-if="roleId === 1" to="/department/new" class="btn-add">Добавить департамент</router-link>
 
     <TableWrapper :items="departments" empty-message="Нет департаментов">
       <template #thead>
@@ -42,7 +42,7 @@
           </td>
           <td>{{ dept.comment }}</td>
           <td class="actions">
-            <BaseButton @click="remove(dept.DepartmentID)">Удалить</BaseButton>
+            <BaseButton v-if="roleId === 1" @click="remove(dept.DepartmentID)">Удалить</BaseButton>
           </td>
         </tr>
       </template>
@@ -57,6 +57,7 @@ import { getOrganizations } from '@/api/organizationsApi';
 import TableWrapper from '@/components/ui/table.vue';
 import BaseButton from '@/components/ui/button.vue';
 import '@/assets/styles/table.css';
+import { getUserRole } from '@/components/ui/authRole.js';
 
 export default {
   components: { TableWrapper, BaseButton },
@@ -64,6 +65,7 @@ export default {
     const departments = ref([]);
     const organizations = ref({});
     const parentDepartments = ref({});
+    const roleId = getUserRole();
 
     onMounted(async () => {
       try {
@@ -109,6 +111,7 @@ export default {
       organizations,
       parentDepartments,
       remove,
+      roleId,
     };
   },
 };

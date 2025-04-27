@@ -52,8 +52,7 @@ export default {
     }
   },
   methods: {
-    async deleteUser(event, id) {
-      event.preventDefault();
+    async deleteUser(id) {
       if (confirm('Вы уверены, что хотите удалить этого пользователя?')) {
         try {
           await deleteUser(id);

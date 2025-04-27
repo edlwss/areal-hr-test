@@ -4,7 +4,7 @@
 
     <EntityInfo :info="info" />
 
-    <EditButton :to="`/department/${department.DepartmentID}/edit`" />
+    <EditButton v-if="roleId === 1" :to="`/department/${department.DepartmentID}/edit`" />
   </div>
 </template>
 
@@ -16,6 +16,7 @@ import { getOrganizationById } from '@/api/organizationsApi';
 
 import EntityInfo from '@/components/ui/info.vue';
 import EditButton from '@/components/ui/linkButton.vue';
+import { getUserRole } from '@/components/ui/authRole.js';
 
 export default {
   components: { EntityInfo, EditButton },
@@ -24,6 +25,7 @@ export default {
     const organization = ref(null);
     const parentDepartment = ref(null);
     const route = useRoute();
+    const roleId = getUserRole();
 
     onMounted(async () => {
       try {
@@ -62,7 +64,7 @@ export default {
       Комментарий: department.value?.comment,
     }));
 
-    return { department, info };
+    return { department, info, roleId };
   },
 };
 </script>

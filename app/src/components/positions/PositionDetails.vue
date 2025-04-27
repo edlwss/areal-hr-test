@@ -2,7 +2,7 @@
   <div class="container">
     <h2 class="title-center">Просмотр позиции</h2>
     <p><strong>Название:</strong> {{ position.name }}</p>
-    <EditButton :to="`/position/${position.PositionID}/edit`" />
+    <EditButton v-if="roleId === 1" :to="`/position/${position.PositionID}/edit`" />
   </div>
 </template>
 
@@ -11,6 +11,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getPositionById } from '@/api/positionsApi';
 import EditButton from '@/components/ui/linkButton.vue';
+import { getUserRole } from '@/components/ui/authRole.js';
 
 export default {
   components: {
@@ -19,6 +20,7 @@ export default {
   setup() {
     const position = ref({});
     const route = useRoute();
+    const roleId = getUserRole();
 
     onMounted(async () => {
       try {
@@ -31,6 +33,7 @@ export default {
 
     return {
       position,
+      roleId
     };
   },
 };

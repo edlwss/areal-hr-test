@@ -7,7 +7,7 @@
       <router-link to="/departments">Отделы</router-link>
       <router-link to="/workers">Работники</router-link>
       <router-link to="/changes">История изменений</router-link>
-      <router-link to="/users">Пользователи</router-link>
+      <router-link v-if="roleId === 1" to="/users">Пользователи</router-link>
     </div>
 
     <button class="logout-btn" @click="logout">Выйти</button>
@@ -16,8 +16,10 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import { getUserRole } from './ui/authRole';
 
 const router = useRouter();
+const roleId = getUserRole();
 
 function logout() {
   localStorage.clear();

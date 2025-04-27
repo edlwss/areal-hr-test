@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h2 class="title-center">Должности</h2>
-    <router-link to="/position/new" class="btn-add">Создать должность</router-link>
+    <router-link v-if="roleId === 1" to="/position/new" class="btn-add">Создать должность</router-link>
 
     <TableWrapper :items="positions" empty-message="Нет должностей">
       <template #thead>
@@ -18,7 +18,7 @@
             </router-link>
           </td>
           <td class="actions">
-            <BaseButton @click="remove(position.PositionID)">Удалить</BaseButton>
+            <BaseButton v-if="roleId === 1" @click="remove(position.PositionID)">Удалить</BaseButton>
           </td>
         </tr>
       </template>
@@ -32,11 +32,13 @@ import { getPositions, deletePosition } from '@/api/positionsApi';
 import TableWrapper from '@/components/ui/table.vue';
 import BaseButton from '@/components/ui/button.vue';
 import '@/assets/styles/table.css';
+import { getUserRole } from '@/components/ui/authRole.js';
 
 export default {
   components: { TableWrapper, BaseButton },
   setup() {
     const positions = ref([]);
+    const roleId = getUserRole();
 
     onMounted(async () => {
       const response = await getPositions();
@@ -50,7 +52,7 @@ export default {
       }
     };
 
-    return { positions, remove };
+    return { positions, remove, roleId };
   },
 };
 </script>
