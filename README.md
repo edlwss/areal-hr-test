@@ -1,7 +1,7 @@
 ## Используемый стек технологий
 
 - **Frontend**: Vue.js 3.5
-- **Backend**: NestJS 10
+- **Backend**: Node.JS (22)
 - **База данных**: PostgreSQL 16
 
 ## Окружение для разработки
