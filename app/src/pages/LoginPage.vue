@@ -19,48 +19,36 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { login as loginApi } from '@/api/authApi';
+import { login as loginRequest, getSessionUser } from '../api/authApi.js';
 
-export default {
-  setup() {
-    const login = ref('');
-    const password = ref('');
-    const errorMessage = ref('');
-    const router = useRouter();
+const login = ref('');
+const password = ref('');
+const errorMessage = ref('');
+const router = useRouter();
 
-    const handleLogin = async () => {
-      errorMessage.value = '';
-      try {
-        const { token } = await loginApi({
-          login: login.value,
-          password: password.value,
-        });
-
-        // Сохраняем токен
-        localStorage.setItem('access_token', token);
-
-        await router.push('/home');
-      } catch (error) {
-        if (error.response && error.response.data && error.response.data.error) {
-          errorMessage.value = error.response.data.error;
-        } else {
-          errorMessage.value = 'Ошибка входа';
-        }
-      }
-    };
-
-    return {
-      login,
-      password,
-      errorMessage,
-      handleLogin,
-    };
-  },
+const handleLogin = async () => {
+  errorMessage.value = '';
+  try {
+    await loginRequest({ login: login.value, password: password.value });
+    const user = await getSessionUser();
+    if (user?.UserID !== undefined) {
+      await router.push('/home');
+    } else {
+      errorMessage.value = 'Ошибка авторизации';
+    }
+  } catch (error) {
+    if (error.response?.data?.error) {
+      errorMessage.value = error.response.data.error;
+    } else {
+      errorMessage.value = 'Ошибка входа';
+    }
+  }
 };
 </script>
+
 
 <style scoped>
 .login-container {

@@ -1,8 +1,10 @@
 require('dotenv').config({ path: __dirname + '/../.env' });
-
+const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const express = require('express');
 const path = require('path');
 const pool = require('./db');
+
 const organizationRoutes = require('./routes/organizationRoutes');
 const positionRoutes = require('./routes/positionsRoutes');
 const departmentRoutes = require('./routes/departmentRoutes');
@@ -13,10 +15,33 @@ const documentsRoutes = require('./routes/documentsRoutes');
 const changeLoggerRouted = require('./routes/changeLoggerRoutes');
 const userRoutes = require('./routes/userRoutes');
 const rolesRoutes = require('./routes/rolesRoutes');
+const login = require('./routes/login');
 const cors = require('cors');
 
 const app = express();
-app.use(cors());
+
+app.use(
+  session({
+    store: new pgSession({
+      pool: pool,
+      tableName: 'session',
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 1000,
+    },
+  })
+);
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 app.use('/api', organizationRoutes);
 app.use('/api', positionRoutes);
@@ -28,6 +53,7 @@ app.use('/api', documentsRoutes);
 app.use('/api', changeLoggerRouted);
 app.use('/api', userRoutes);
 app.use('/api', rolesRoutes);
+app.use('/api', login);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads/documents')));
 
 const PORT = process.env.PORT;

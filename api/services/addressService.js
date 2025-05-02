@@ -1,12 +1,12 @@
 const pool = require('../db');
 
 class AddressService {
-  async createAddress({ regin, localities, street, house, building, apartment }) {
+  async createAddress({ regin, localities, street, house, building, apartment }, clint) {
     const query = `
             INSERT INTO addresses (regin, localities, street, house, building, apartment)
             VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *`;
-    const { rows } = await pool.query(query, [
+    const { rows } = await clint.query(query, [
       regin,
       localities,
       street,

@@ -1,13 +1,10 @@
 const pool = require('../db');
 
 class PassportDataService {
-  async createPassportData({
-    passport_series,
-    passport_number,
-    data_of_issue,
-    unit_code,
-    issued_by_whom,
-  }) {
+  async createPassportData(
+    { passport_series, passport_number, data_of_issue, unit_code, issued_by_whom },
+    client
+  ) {
     console.log('data_of_issue:', data_of_issue);
     const query = `
         INSERT INTO passport_data (passport_series, passport_number, data_of_issue, unit_code, issued_by_whom)
@@ -15,7 +12,7 @@ class PassportDataService {
         RETURNING *`;
     const values = [passport_series, passport_number, data_of_issue, unit_code, issued_by_whom];
 
-    const { rows } = await pool.query(query, values);
+    const { rows } = await client.query(query, values);
     return rows[0];
   }
 

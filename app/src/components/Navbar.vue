@@ -10,21 +10,35 @@
       <router-link v-if="roleId === 1" to="/users">Пользователи</router-link>
     </div>
 
-    <button class="logout-btn" @click="logout">Выйти</button>
+    <button class="logout-btn" @click="logoutHandler">Выйти</button>
   </nav>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { getUserRole } from './ui/authRole';
+import {logout, getSessionUser,} from '../api/authApi';
+
+async function logoutHandler() {
+  try {
+    await logout();
+    await router.push('/');
+  } catch (e) {
+    console.error('Ошибка выхода:', e);
+  }
+}
 
 const router = useRouter();
-const roleId = getUserRole();
+const roleId = ref<number | null>(null);
 
-function logout() {
-  localStorage.clear();
-  router.push('/');
-}
+onMounted(async () => {
+  try {
+    const user = await getSessionUser();
+    roleId.value = user.role_ID;
+  } catch (e) {
+    console.error('Ошибка при получении роли пользователя:', e);
+  }
+});
 </script>
 
 <style scoped>

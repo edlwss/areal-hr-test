@@ -1,15 +1,19 @@
 const pool = require('../db');
 const ChangeLogger = require('./changeLoggerService');
+const bcrypt = require('bcrypt');
 
 class UserService {
   async createUser(data) {
     const { login, password, role_ID, surname, name, middlename } = data;
 
+    const hashedPassword = await bcrypt.hash(password, 10); // соль на 10 раундов
+
     const query = `
-            INSERT INTO users (login, password, "role_ID", surname, name, middlename)
-            VALUES ($1, $2, $3, $4, $5, $6)
-            RETURNING *`;
-    const values = [login, password, role_ID, surname, name, middlename];
+    INSERT INTO users (login, password, "role_ID", surname, name, middlename)
+    VALUES ($1, $2, $3, $4, $5, $6)
+    RETURNING *;
+  `;
+    const values = [login, hashedPassword, role_ID, surname, name, middlename];
     const { rows } = await pool.query(query, values);
 
     await ChangeLogger.logChange({

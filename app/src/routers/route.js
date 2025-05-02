@@ -8,6 +8,7 @@ import HrOperation from '@/pages/hrOperationsPage.vue';
 import UsersPage from '@/pages/UserPage.vue';
 import ChangeLoggerPage from '@/components/ChangeLoggerHistory.vue';
 import LoginPage from '@/pages/LoginPage.vue';
+import { getSessionUser } from '@/api/authApi.js';
 
 const routes = [
   { path: '/home', component: Home, meta: { requiresAuth: true } },
@@ -167,15 +168,23 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('access_token');
+router.beforeEach(async (to, from, next) => {
+  const isPublic = to.path === '/'; // Страница логина
 
-  if (!token && to.path !== '/') {
-    next('/');
-  } else if (token && to.path === '/') {
-    next('/home');
-  } else {
-    next();
+  if (isPublic) {
+    try {
+      await getSessionUser();
+      return next('/home');
+    } catch {
+      return next();
+    }
+  }
+
+  try {
+    await getSessionUser();
+    return next();
+  } catch {
+    return next('/');
   }
 });
 
