@@ -1,0 +1,42 @@
+services:
+  db:
+    image: postgres:16
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2904
+      POSTGRES_DB: hr
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  api:
+    build:
+      context: .
+      dockerfile: containers/api/Dockerfile
+    container_name: api
+    ports:
+      - '3010:3010'
+    env_file:
+      - .env
+    volumes:
+      - ./api:/usr/src/app
+    depends_on:
+      - db
+
+  app:
+    build:
+      context: .
+      dockerfile: containers/app/Dockerfile
+    container_name: app
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./app:/app
+    depends_on:
+      - api
+
+volumes:
+  postgres_data:
