@@ -33,8 +33,11 @@ services:
     container_name: app
     ports:
       - '5173:5173'
+    env_file:
+      - .env
     volumes:
-      - ./app:/app
+      - ./app:/app:cached
+      - /app/node_modules
     depends_on:
       - api
 

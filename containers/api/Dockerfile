@@ -2,6 +2,9 @@ FROM node:22
 
 WORKDIR /usr/src/app
 
+# Установить необходимые инструменты для сборки
+RUN apt-get update && apt-get install -y build-essential python3
+
 COPY api/package*.json ./
 RUN npm install
 
@@ -12,4 +15,4 @@ ENV NODE_ENV=production
 
 EXPOSE 3010
 
-CMD dotenv -e ../.env npx node-pg-migrate up && node server.js
+CMD npx dotenv npx node-pg-migrate up && node server.js

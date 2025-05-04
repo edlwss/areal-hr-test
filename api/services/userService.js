@@ -1,6 +1,6 @@
 const pool = require('../db');
 const ChangeLogger = require('./changeLoggerService');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 class UserService {
   async createUser(data) {

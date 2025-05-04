@@ -13,11 +13,11 @@
   },
   "dependencies": {
     "@eslint/js": "^9.25.0",
-    "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",
     "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "dotenv-cli": "^8.0.0",
     "express": "^4.17.1",
     "express-session": "^1.18.1",
     "globals": "^16.0.0",
