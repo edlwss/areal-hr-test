@@ -25,7 +25,7 @@
       <li v-for="doc in documents" :key="doc.DocumentID" class="doc-item">
         {{ doc.name }}
         <a
-          :href="`http://localhost:3010/api/document/download/${doc.file}`"
+          :href="`${apiBaseUrl}/document/download/${doc.file}`"
           target="_blank"
           class="btn btn-edit ml-2"
           >Скачать</a
@@ -56,6 +56,7 @@ const worker = ref(null);
 const documents = ref([]);
 const name = ref('');
 const file = ref(null);
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const workerInfo = ref({});
 const passportInfo = ref({});
