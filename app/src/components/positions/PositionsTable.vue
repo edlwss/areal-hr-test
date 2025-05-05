@@ -32,15 +32,18 @@ import { getPositions, deletePosition } from '@/api/positionsApi';
 import TableWrapper from '@/components/ui/table.vue';
 import BaseButton from '@/components/ui/button.vue';
 import '@/assets/styles/table.css';
-import { getUserRole } from '@/components/ui/authRole.js';
+import { getSessionUser } from '@/api/authApi.js';
 
 export default {
   components: { TableWrapper, BaseButton },
   setup() {
     const positions = ref([]);
-    const roleId = getUserRole();
+    const roleId = ref(null);
 
     onMounted(async () => {
+      const user = await getSessionUser();
+      roleId.value = user.role_ID;
+
       const response = await getPositions();
       positions.value = response.data;
     });

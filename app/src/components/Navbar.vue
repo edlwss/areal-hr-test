@@ -29,7 +29,7 @@ async function logoutHandler() {
 }
 
 const router = useRouter();
-const roleId = ref<number | null>(null);
+const roleId = ref(null);
 
 onMounted(async () => {
   try {

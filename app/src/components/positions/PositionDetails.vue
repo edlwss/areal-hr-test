@@ -11,7 +11,7 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getPositionById } from '@/api/positionsApi';
 import EditButton from '@/components/ui/linkButton.vue';
-import { getUserRole } from '@/components/ui/authRole.js';
+import { getSessionUser } from '@/api/authApi.js';
 
 export default {
   components: {
@@ -20,10 +20,13 @@ export default {
   setup() {
     const position = ref({});
     const route = useRoute();
-    const roleId = getUserRole();
+    const roleId = ref(null);
 
     onMounted(async () => {
       try {
+        const user = await getSessionUser();
+        roleId.value = user.role_ID;
+
         const response = await getPositionById(route.params.id);
         position.value = response.data;
       } catch (error) {

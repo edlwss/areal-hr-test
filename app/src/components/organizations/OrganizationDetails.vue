@@ -15,17 +15,20 @@ import { getOrganizationById } from '@/api/organizationsApi';
 
 import EntityInfo from '@/components/ui/info.vue';
 import EditButton from '@/components/ui/linkButton.vue';
-import { getUserRole } from '@/components/ui/authRole.js';
+import { getSessionUser } from '@/api/authApi.js';
 
 export default {
   components: { EntityInfo, EditButton },
   setup() {
     const organization = ref(null);
     const route = useRoute();
-    const roleId =getUserRole();
+    const roleId = ref(null);
 
     onMounted(async () => {
       try {
+        const user = await getSessionUser();
+        roleId.value = user.role_ID;
+
         const response = await getOrganizationById(route.params.id);
         organization.value = response.data;
       } catch (error) {

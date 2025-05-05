@@ -57,7 +57,7 @@ import { getOrganizations } from '@/api/organizationsApi';
 import TableWrapper from '@/components/ui/table.vue';
 import BaseButton from '@/components/ui/button.vue';
 import '@/assets/styles/table.css';
-import { getUserRole } from '@/components/ui/authRole.js';
+import { getSessionUser } from '@/api/authApi.js';
 
 export default {
   components: { TableWrapper, BaseButton },
@@ -65,13 +65,21 @@ export default {
     const departments = ref([]);
     const organizations = ref({});
     const parentDepartments = ref({});
-    const roleId = getUserRole();
+    const roleId = ref(null);
+    const removing = ref(false);
 
-    onMounted(async () => {
+    const loadData = async () => {
       try {
-        const [deptRes, orgRes] = await Promise.all([getDepartments(), getOrganizations()]);
+        const user = await getSessionUser();
+        roleId.value = user.role_ID;
+
+        const [deptRes, orgRes] = await Promise.all([
+          getDepartments(),
+          getOrganizations(),
+        ]);
 
         departments.value = deptRes.data;
+
         organizations.value = orgRes.data.reduce((acc, org) => {
           acc[org.OrganizationID] = org.name;
           return acc;
@@ -85,11 +93,9 @@ export default {
           return acc;
         }, {});
       } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
+        console.error('Ошибка при загрузке данных или получении роли:', error);
       }
-    });
-
-    const removing = ref(false);
+    };
 
     const remove = async (id) => {
       if (removing.value) return;
@@ -106,6 +112,8 @@ export default {
       }
     };
 
+    onMounted(loadData);
+
     return {
       departments,
       organizations,
@@ -116,3 +124,4 @@ export default {
   },
 };
 </script>
+

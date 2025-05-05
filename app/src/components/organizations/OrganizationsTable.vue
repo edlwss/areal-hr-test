@@ -29,44 +29,55 @@
 </template>
 
 <script>
+import { ref, onMounted } from 'vue';
 import { getOrganizations, deleteOrganization as deleteOrganizationApi } from '@/api/organizationsApi';
+import { getSessionUser } from '@/api/authApi.js';
 import TableWrapper from '@/components/ui/table.vue';
 import BaseButton from '@/components/ui/button.vue';
 import '@/assets/styles/table.css';
-import { getUserRole } from '@/components/ui/authRole.js';
 
 export default {
   components: { TableWrapper, BaseButton },
-  data() {
-    return {
-      organizations: [],
-      roleId: null, 
+  setup() {
+    const organizations = ref([]);
+    const roleId = ref(null);
+
+
+    const loadData = async () => {
+      try {
+        const user = await getSessionUser();
+        roleId.value = user.role_ID;
+
+        const response = await getOrganizations();
+        organizations.value = response.data;
+      } catch (error) {
+        console.error('Ошибка при загрузке организаций:', error);
+      }
     };
-  },
-  async mounted() {
-    this.roleId = getUserRole();
-    try {
-      const response = await getOrganizations();
-      this.organizations = response.data;
-    } catch (error) {
-      console.error('Ошибка при загрузке организаций:', error);
-    }
-  },
-  methods: {
-    async deleteOrganization(id) {
-      if (this.roleId !== 1) { // проверка роли
+
+    const deleteOrganization = async (id) => {
+      if (roleId.value !== 1) {
         alert('У вас нет прав на удаление организаций.');
         return;
       }
       if (confirm('Вы уверены, что хотите удалить эту организацию?')) {
         try {
           await deleteOrganizationApi(id);
-          this.organizations = this.organizations.filter((org) => org.OrganizationID !== id);
+          organizations.value = organizations.value.filter((org) => org.OrganizationID !== id);
         } catch (error) {
           console.error('Ошибка при удалении организации:', error);
         }
       }
-    },
+    };
+
+    onMounted(loadData);
+
+    return {
+      organizations,
+      roleId,
+      deleteOrganization,
+    };
   },
 };
 </script>
+
