@@ -3,14 +3,13 @@ services:
     image: postgres:16
     container_name: db
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 2904
-      POSTGRES_DB: hr
+    env_file:
+      - .env
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
 
   api:
     build:
@@ -32,14 +31,13 @@ services:
       dockerfile: containers/app/Dockerfile
     container_name: app
     ports:
-      - '5173:5173'
+      - '5173:80'
     env_file:
       - .env
-    volumes:
-      - ./app:/app:cached
-      - /app/node_modules
     depends_on:
       - api
 
+
 volumes:
   postgres_data:
+

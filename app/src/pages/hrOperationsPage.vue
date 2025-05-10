@@ -8,7 +8,7 @@
 
 <script>
 import Navbar from '@/components/Navbar.vue';
-import HrOperationForm from '@/components/hrOperations/HrOperation.vue';
+import HrOperationForm from '@/components/hrOperations/hrOperation.vue';
 import WorkerHrHistory from '@/components/hrOperations/hrOperationsHistory.vue';
 
 export default {

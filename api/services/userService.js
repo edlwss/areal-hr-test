@@ -1,12 +1,12 @@
 const pool = require('../db');
 const ChangeLogger = require('./changeLoggerService');
-const bcrypt = require('bcryptjs');
+const argon2 = require('argon2');
 
 class UserService {
   async createUser(data) {
     const { login, password, role_ID, surname, name, middlename } = data;
 
-    const hashedPassword = await bcrypt.hash(password, 10); // соль на 10 раундов
+    const hashedPassword = await argon2.hash(password);
 
     const query = `
     INSERT INTO users (login, password, "role_ID", surname, name, middlename)
