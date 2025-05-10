@@ -17,7 +17,7 @@ class AddressService {
     return rows[0];
   }
 
-  async updateAddress(id, newData) {
+  async updateAddress({ id, newData }, client) {
     const selectQuery = `SELECT * FROM addresses WHERE "AddressID" = $1`;
     const oldRow = (await pool.query(selectQuery, [id])).rows[0];
 
@@ -34,7 +34,7 @@ class AddressService {
       newData.apartment,
       id,
     ];
-    const { rows } = await pool.query(query, values);
+    const { rows } = await client.query(query, values);
 
     const changes = diff(oldRow, rows[0]);
 

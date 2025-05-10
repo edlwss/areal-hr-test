@@ -85,14 +85,19 @@ class WorkerService {
       const changes = {};
 
       if (address) {
-        const { changes: addressChanges } = await AddressService.updateAddress(address_ID, address);
+        const { changes: addressChanges } = await AddressService.updateAddress(
+          address_ID,
+          address,
+          client
+        );
         if (Object.keys(addressChanges).length) changes.address = addressChanges;
       }
 
       if (passport) {
         const { changes: passportChanges } = await PassportDataService.updatePassportData(
           passport_data_ID,
-          passport
+          passport,
+          client
         );
         if (Object.keys(passportChanges).length) changes.passport = passportChanges;
       }
@@ -135,11 +140,12 @@ class WorkerService {
   }
 
   async deleteWorker(id) {
+    const client = pool.connect();
     const query = `
             UPDATE workers
             SET deleted_at = CURRENT_TIMESTAMP
             WHERE "WorkerID" = $1 RETURNING *`;
-    const { rows } = await pool.query(query, [id]);
+    const { rows } = await client.query(query, [id]);
 
     if (rows.length) {
       await ChangeLogger.logChange({

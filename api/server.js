@@ -21,10 +21,12 @@ const cors = require('cors');
 const app = express();
 const passport = require('./passportConfig');
 
-app.use(cors({
-  origin: 'http://localhost:5173',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  })
+);
 
 app.use(
   session({
@@ -46,7 +48,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 app.use(express.json());
 app.use('/api', organizationRoutes);

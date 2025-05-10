@@ -16,7 +16,7 @@ class PassportDataService {
     return rows[0];
   }
 
-  async updatePassportData(id, newData) {
+  async updatePassportData({id, newData}, client) {
     const selectQuery = `SELECT * FROM passport_data WHERE "PassportDataID" = $1`;
     const oldRow = (await pool.query(selectQuery, [id])).rows[0];
 
@@ -37,7 +37,7 @@ class PassportDataService {
       newData.issued_by_whom,
       id,
     ];
-    const { rows } = await pool.query(query, values);
+    const { rows } = await client.query(query, values);
 
     const changes = diff(oldRow, rows[0]);
 

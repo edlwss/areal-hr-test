@@ -4,24 +4,34 @@ const argon2 = require('argon2');
 
 class UserService {
   async createUser(data) {
-    const { login, password, role_ID, surname, name, middlename } = data;
+    const client = await pool.connect();
+    try {
+      const { login, password, role_ID, surname, name, middlename } = data;
+      const hashedPassword = await argon2.hash(password);
 
-    const hashedPassword = await argon2.hash(password);
+      await client.query('BEGIN');
 
-    const query = `
-    INSERT INTO users (login, password, "role_ID", surname, name, middlename)
-    VALUES ($1, $2, $3, $4, $5, $6)
-    RETURNING *;
-  `;
-    const values = [login, hashedPassword, role_ID, surname, name, middlename];
-    const { rows } = await pool.query(query, values);
+      const query = `
+        INSERT INTO users (login, password, "role_ID", surname, name, middlename)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *;
+      `;
+      const values = [login, hashedPassword, role_ID, surname, name, middlename];
+      const { rows } = await client.query(query, values);
 
-    await ChangeLogger.logChange({
-      object_operation: 'user',
-      changed_field: { created: rows[0] },
-    });
+      await ChangeLogger.logChange({
+        object_operation: 'user',
+        changed_field: { created: rows[0] },
+      }, client);
 
-    return rows[0];
+      await client.query('COMMIT');
+      return rows[0];
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
+    }
   }
 
   async getAllUsers() {
@@ -38,49 +48,74 @@ class UserService {
   }
 
   async updateUser(id, data) {
-    const { rows: oldRows } = await pool.query(`SELECT * FROM users WHERE "UserID" = $1`, [id]);
-    const oldData = oldRows[0];
-    if (!oldData) return null;
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
 
-    const { role_ID, surname, name, middlename } = data;
-    const query = `
-            UPDATE users
-            SET "role_ID" = $1,
-                surname = $2, name = $3, middlename = $4,
-                updated_at = CURRENT_TIMESTAMP
-            WHERE "UserID" = $5 AND deleted_at IS NULL
-            RETURNING *`;
-    const values = [role_ID, surname, name, middlename, id];
-    const { rows } = await pool.query(query, values);
-    const updated = rows[0];
+      const { rows: oldRows } = await client.query(`SELECT * FROM users WHERE "UserID" = $1`, [id]);
+      const oldData = oldRows[0];
+      if (!oldData) {
+        await client.query('ROLLBACK');
+        return null;
+      }
 
-    const changes = diff(extractFields(oldData), extractFields(data));
+      const { role_ID, surname, name, middlename } = data;
+      const query = `
+        UPDATE users
+        SET "role_ID" = $1,
+            surname = $2, name = $3, middlename = $4,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE "UserID" = $5 AND deleted_at IS NULL
+        RETURNING *`;
+      const values = [role_ID, surname, name, middlename, id];
+      const { rows } = await client.query(query, values);
+      const updated = rows[0];
 
-    if (Object.keys(changes).length) {
-      await ChangeLogger.logChange({
-        object_operation: 'user',
-        changed_field: changes,
-      });
+      const changes = diff(extractFields(oldData), extractFields(data));
+
+      if (Object.keys(changes).length) {
+        await ChangeLogger.logChange({
+          object_operation: 'user',
+          changed_field: changes,
+        }, client);
+      }
+
+      await client.query('COMMIT');
+      return updated;
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
     }
-
-    return updated;
   }
 
   async deleteUser(id) {
-    const query = `
-            UPDATE users
-            SET deleted_at = CURRENT_TIMESTAMP
-            WHERE "UserID" = $1 RETURNING *`;
-    const { rows } = await pool.query(query, [id]);
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
 
-    if (rows.length) {
-      await ChangeLogger.logChange({
-        object_operation: 'user',
-        changed_field: { deleted: rows[0] },
-      });
+      const query = `
+        UPDATE users
+        SET deleted_at = CURRENT_TIMESTAMP
+        WHERE "UserID" = $1 RETURNING *`;
+      const { rows } = await client.query(query, [id]);
+
+      if (rows.length) {
+        await ChangeLogger.logChange({
+          object_operation: 'user',
+          changed_field: { deleted: rows[0] },
+        }, client);
+      }
+
+      await client.query('COMMIT');
+      return rows[0];
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
     }
-
-    return rows[0];
   }
 }
 

@@ -1,7 +1,7 @@
 const pool = require('../db');
 
 class ChangeLogger {
-  async logChange({ object_operation, changed_field, user_ID = null }) {
+  async logChange({ object_operation, changed_field, user_ID = null }, client) {
     const query = `
             INSERT INTO change_history (
                 date_operation, time_operation, "user_ID", object_operation, changed_field
@@ -9,7 +9,7 @@ class ChangeLogger {
                          CURRENT_DATE, CURRENT_TIME, $1, $2, $3
                      )
         `;
-    await pool.query(query, [user_ID, object_operation, JSON.stringify(changed_field)]);
+    await client.query(query, [user_ID, object_operation, JSON.stringify(changed_field)]);
   }
 
   async getAllChanges() {
