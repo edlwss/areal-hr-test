@@ -11,15 +11,19 @@
         <label>Действие</label>
         <select v-model="form.actionID" required>
           <option disabled value="">Выберите действие</option>
-          <option v-for="action in actions" :key="action.ActionID" :value="action.ActionID">
+          <option
+            v-for="action in availableActions"
+            :key="action.ActionID"
+            :value="action.ActionID"
+          >
             {{ action.name }}
           </option>
         </select>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" v-if="showPosition">
         <label>Должность</label>
-        <select v-model="form.position_ID">
+        <select v-model="form.position_ID" :disabled="isPositionDisabled">
           <option value="">-</option>
           <option
             v-for="position in positions"
@@ -31,9 +35,9 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" v-if="showDepartment">
         <label>Отдел</label>
-        <select v-model="form.department_ID">
+        <select v-model="form.department_ID" :disabled="isDeptDisabled">
           <option value="">-</option>
           <option
             v-for="department in departments"
@@ -45,9 +49,9 @@
         </select>
       </div>
 
-      <div class="form-group">
+      <div class="form-group" v-if="showSalary">
         <label>Зарплата</label>
-        <input type="number" v-model="form.salary" step="0.01" />
+        <input type="number" v-model="form.salary" step="0.01" :disabled="isSalaryDisabled" />
       </div>
 
       <div class="form-actions">
@@ -58,7 +62,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getActions } from '@/api/actionApi.js';
 import { getDepartments } from '@/api/departmentsApi.js';
@@ -97,6 +101,37 @@ onMounted(async () => {
   departments.value = departmentsRes.data;
   worker.value = workerRes.data;
 });
+
+function getActionIdByName(name) {
+  const action = actions.value.find(a => a.name === name);
+  return action?.ActionID ?? null;
+}
+
+const availableActions = computed(() => {
+  if (!worker.value) return [];
+
+  const last = worker.value.last_hr_operation;
+
+  if (!last || last.actionID === getActionIdByName('Увольнение с работы')) {
+    return actions.value.filter(a => a.name === 'Изменение отдела');
+  }
+
+  return actions.value.filter(a =>
+    ['Изменение зарплаты', 'Изменение отдела', 'Увольнение с работы'].includes(a.name)
+  );
+});
+
+const isSalaryDisabled = computed(() => form.value.actionID !== getActionIdByName('Изменение зарплаты'));
+const isDeptDisabled = computed(() => form.value.actionID !== getActionIdByName('Изменение отдела'));
+const isPositionDisabled = computed(() => form.value.actionID !== getActionIdByName('Изменение отдела'));
+
+const showSalary = computed(() => form.value.actionID === getActionIdByName('Изменение зарплаты'));
+const showDepartment = computed(() =>
+  form.value.actionID === getActionIdByName('Изменение отдела')
+);
+const showPosition = computed(() =>
+  form.value.actionID === getActionIdByName('Изменение отдела')
+);
 
 const submitForm = async () => {
   try {

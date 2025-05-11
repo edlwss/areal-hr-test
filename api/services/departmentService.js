@@ -14,9 +14,8 @@ class DepartmentService {
 
       await ChangeLogger.logChange({
         object_operation: 'department',
-        changed_field: { created: rows[0] },
-        client,
-      });
+        changed_field: { created: rows[0] }
+      }, client);
 
       await client.query('COMMIT');
       return rows[0];
@@ -63,8 +62,7 @@ class DepartmentService {
         await ChangeLogger.logChange({
           object_operation: 'department',
           changed_field: changes,
-          client,
-        });
+        }, client);
       }
 
       await client.query('COMMIT');
@@ -88,9 +86,8 @@ class DepartmentService {
       if (rows.length) {
         await ChangeLogger.logChange({
           object_operation: 'department',
-          changed_field: { deleted: rows[0] },
-          client,
-        });
+          changed_field: { deleted: rows[0] }
+        }, client);
       }
 
       await client.query('COMMIT');

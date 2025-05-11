@@ -30,7 +30,7 @@ class WorkerService {
       await ChangeLogger.logChange({
         object_operation: 'worker',
         changed_field: { created: rows[0] },
-      });
+      }, client);
 
       await client.query('COMMIT');
       return rows[0];
@@ -54,14 +54,29 @@ class WorkerService {
 
   async getWorkerById(id) {
     const query = `
-            SELECT w.*, p.*, a.*
-            FROM workers w
-                     JOIN passport_data p ON w."passport_data_ID" = p."PassportDataID"
-                     JOIN addresses a ON w."address_ID" = a."AddressID"
-            WHERE w."WorkerID" = $1`;
+        SELECT w.*, p.*, a.*,
+               (
+                   SELECT json_build_object(
+                                  'HrOperationID', h."HrOperationID",
+                                  'actionID', h."actionID",
+                                  'position_ID', h."position_ID",
+                                  'department_ID', h."department_ID",
+                                  'salary', h.salary
+                          )
+                   FROM hr_operations h
+                   WHERE h."worker_ID" = w."WorkerID"
+                   ORDER BY h."HrOperationID" DESC
+                   LIMIT 1
+            ) as last_hr_operation
+        FROM workers w
+            JOIN passport_data p ON w."passport_data_ID" = p."PassportDataID"
+            JOIN addresses a ON w."address_ID" = a."AddressID"
+        WHERE w."WorkerID" = $1
+    `;
     const { rows } = await pool.query(query, [id]);
     return rows[0];
   }
+
 
   async updateWorker(id, { surname, name, middlename, birth_date, address, passport }) {
     const client = await pool.connect();
@@ -86,8 +101,8 @@ class WorkerService {
 
       if (address) {
         const { changes: addressChanges } = await AddressService.updateAddress(
-          address_ID,
-          address,
+          {address_ID,
+          address},
           client
         );
         if (Object.keys(addressChanges).length) changes.address = addressChanges;
@@ -95,8 +110,8 @@ class WorkerService {
 
       if (passport) {
         const { changes: passportChanges } = await PassportDataService.updatePassportData(
-          passport_data_ID,
-          passport,
+          {passport_data_ID,
+          passport},
           client
         );
         if (Object.keys(passportChanges).length) changes.passport = passportChanges;
@@ -126,7 +141,7 @@ class WorkerService {
         await ChangeLogger.logChange({
           object_operation: 'worker',
           changed_field: changes,
-        });
+        }, client);
       }
 
       await client.query('COMMIT');
@@ -151,7 +166,7 @@ class WorkerService {
       await ChangeLogger.logChange({
         object_operation: 'worker',
         changed_field: { deleted: rows[0] },
-      });
+      }, client);
     }
     return rows[0];
   }
