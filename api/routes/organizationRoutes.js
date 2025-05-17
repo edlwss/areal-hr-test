@@ -5,7 +5,6 @@ const {
   organizationUpdateSchema,
 } = require('../validators/organizationValidator');
 const validate = require('../validate');
-const { updateWorkerSchema } = require('../validators/workerValidator');
 
 const router = express.Router();
 

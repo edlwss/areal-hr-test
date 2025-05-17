@@ -37,6 +37,16 @@ services:
     depends_on:
       - api
 
+  docs:
+    build:
+      context: .
+      dockerfile: containers/docs/Dockerfile
+    container_name: docs
+    ports:
+      - '8080:80'
+    volumes:
+      - ./docs:/docs
+
 
 volumes:
   postgres_data:
