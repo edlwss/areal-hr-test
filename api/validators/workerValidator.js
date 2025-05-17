@@ -93,6 +93,7 @@ const updateWorkerSchema = Joi.object({
 
   passport: passportSchema,
   address: addressSchema,
+  last_hr_operation: Joi.any().strip(),
 }).unknown(true);
 
 module.exports = {

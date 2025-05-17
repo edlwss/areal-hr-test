@@ -102,35 +102,56 @@ onMounted(async () => {
   worker.value = workerRes.data;
 });
 
-function getActionIdByName(name) {
+const getActionIdByName = (name) => {
   const action = actions.value.find(a => a.name === name);
   return action?.ActionID ?? null;
-}
+};
+
+const actionIds = computed(() => ({
+  hire: getActionIdByName('Взять в штат'),
+  changeDept: getActionIdByName('Изменение отдела'),
+  changeSalary: getActionIdByName('Изменение зарплаты'),
+  fire: getActionIdByName('Увольнение с работы'),
+}));
 
 const availableActions = computed(() => {
-  if (!worker.value) return [];
+  if (!worker.value || actions.value.length === 0) return [];
 
   const last = worker.value.last_hr_operation;
+  const { hire, changeDept, changeSalary, fire } = actionIds.value;
 
-  if (!last || last.actionID === getActionIdByName('Увольнение с работы')) {
-    return actions.value.filter(a => a.name === 'Изменение отдела');
+  if (!last || last.actionID === fire) {
+    return actions.value.filter(a => a.ActionID === hire);
   }
 
   return actions.value.filter(a =>
-    ['Изменение зарплаты', 'Изменение отдела', 'Увольнение с работы'].includes(a.name)
+    [changeDept, changeSalary, fire].includes(a.ActionID)
   );
 });
 
-const isSalaryDisabled = computed(() => form.value.actionID !== getActionIdByName('Изменение зарплаты'));
-const isDeptDisabled = computed(() => form.value.actionID !== getActionIdByName('Изменение отдела'));
-const isPositionDisabled = computed(() => form.value.actionID !== getActionIdByName('Изменение отдела'));
-
-const showSalary = computed(() => form.value.actionID === getActionIdByName('Изменение зарплаты'));
-const showDepartment = computed(() =>
-  form.value.actionID === getActionIdByName('Изменение отдела')
+const showSalary = computed(() =>
+  form.value.actionID === actionIds.value.changeSalary ||
+  form.value.actionID === actionIds.value.hire
 );
+
+const showDepartment = computed(() =>
+  form.value.actionID === actionIds.value.changeDept ||
+  form.value.actionID === actionIds.value.hire
+);
+
 const showPosition = computed(() =>
-  form.value.actionID === getActionIdByName('Изменение отдела')
+  form.value.actionID === actionIds.value.changeDept ||
+  form.value.actionID === actionIds.value.hire
+);
+
+const isSalaryDisabled = computed(() =>
+  ![actionIds.value.changeSalary, actionIds.value.hire].includes(form.value.actionID)
+);
+const isDeptDisabled = computed(() =>
+  ![actionIds.value.changeDept, actionIds.value.hire].includes(form.value.actionID)
+);
+const isPositionDisabled = computed(() =>
+  ![actionIds.value.changeDept, actionIds.value.hire].includes(form.value.actionID)
 );
 
 const submitForm = async () => {

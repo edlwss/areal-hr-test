@@ -20,7 +20,7 @@
             </router-link>
           </td>
           <td>{{ formatFIO(user) }}</td>
-          <td>{{ user.role_name || `ID ${user.role_ID}` }}</td>
+          <td>{{ user.role }}</td>
           <td class="actions">
             <BaseButton @click="deleteUser(user.UserID)">Удалить</BaseButton>
           </td>

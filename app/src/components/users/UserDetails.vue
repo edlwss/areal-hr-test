@@ -33,7 +33,7 @@ export default {
 
     const info = computed(() => ({
       ФИО: `${user.value?.surname} ${user.value?.name} ${user.value?.middlename || ''}`,
-      Роль: user.value?.role_ID,
+      Роль: user.value?.role,
       Login: user.value?.login,
     }));
 

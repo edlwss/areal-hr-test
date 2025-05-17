@@ -35,15 +35,34 @@ class UserService {
   }
 
   async getAllUsers() {
-    const { rows } = await pool.query(`SELECT * FROM users WHERE deleted_at IS NULL`);
+    const { rows } = await pool.query(`
+        SELECT
+            u."UserID",
+            u.login,
+            u.surname,
+            u.name,
+            u.middlename,
+            r.name AS role
+        FROM users u
+                 JOIN roles r ON u."role_ID" = r."RoleID"
+        WHERE u.deleted_at IS NULL
+    `);
     return rows;
   }
 
   async getUserById(id) {
-    const { rows } = await pool.query(
-      `SELECT * FROM users WHERE "UserID" = $1 AND deleted_at IS NULL`,
-      [id]
-    );
+    const { rows } = await pool.query(`
+        SELECT
+            u."UserID",
+            u.login,
+            u.surname,
+            u.name,
+            u.middlename,
+            r.name AS role
+        FROM users u
+                 JOIN roles r ON u."role_ID" = r."RoleID"
+        WHERE u."UserID" = $1 AND u.deleted_at IS NULL
+    `, [id]);
     return rows[0];
   }
 

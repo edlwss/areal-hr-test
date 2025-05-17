@@ -22,6 +22,7 @@ router.get('/users', async (req, res) => {
     const users = await UserService.getAllUsers();
     res.status(200).json(users);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

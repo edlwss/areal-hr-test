@@ -80,6 +80,7 @@ class WorkerService {
 
   async updateWorker(id, { surname, name, middlename, birth_date, address, passport }) {
     const client = await pool.connect();
+    console.log('Updating address with data:', address);
     try {
       await client.query('BEGIN');
 
@@ -100,9 +101,10 @@ class WorkerService {
       const changes = {};
 
       if (address) {
+        console.log('Updating address with data:', address);
         const { changes: addressChanges } = await AddressService.updateAddress(
-          {address_ID,
-          address},
+          address_ID,
+          address,
           client
         );
         if (Object.keys(addressChanges).length) changes.address = addressChanges;
@@ -110,8 +112,8 @@ class WorkerService {
 
       if (passport) {
         const { changes: passportChanges } = await PassportDataService.updatePassportData(
-          {passport_data_ID,
-          passport},
+          passport_data_ID,
+          passport,
           client
         );
         if (Object.keys(passportChanges).length) changes.passport = passportChanges;

@@ -109,30 +109,34 @@ onMounted(async () => {
     const { data } = await getWorkerById(route.params.id);
 
     form.value = {
-      surname: data.surname,
-      name: data.name,
-      middlename: data.middlename,
+      surname: data.surname || '',
+      name: data.name || '',
+      middlename: data.middlename || '',
       birth_date: formatDate(data.birth_date),
+
       passport: {
-        passport_series: data.passport_series,
-        passport_number: data.passport_number,
+        passport_series: data.passport_series || '',
+        passport_number: data.passport_number || '',
         data_of_issue: formatDate(data.data_of_issue),
-        unit_code: data.unit_code,
-        issued_by_whom: data.issued_by_whom,
+        unit_code: data.unit_code || '',
+        issued_by_whom: data.issued_by_whom || '',
       },
+
       address: {
-        regin: data.regin,
-        localities: data.localities,
-        street: data.street,
-        house: data.house,
-        building: data.building,
-        apartment: data.apartment,
+        regin: data.regin || '',
+        localities: data.localities || '',
+        street: data.street || '',
+        house: data.house || '',
+        building: data.building || '',
+        apartment: data.apartment || '',
       },
     };
   } catch (err) {
     console.error('Ошибка при загрузке данных работника:', err);
   }
 });
+
+
 
 const submit = async () => {
   if (

@@ -17,7 +17,7 @@ class AddressService {
     return rows[0];
   }
 
-  async updateAddress({ id, newData }, client) {
+  async updateAddress( id, newData , client) {
     const selectQuery = `SELECT * FROM addresses WHERE "AddressID" = $1`;
     const oldRow = (await pool.query(selectQuery, [id])).rows[0];
 
