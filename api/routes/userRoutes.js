@@ -1,21 +1,29 @@
 const express = require('express');
 const UserService = require('../services/userService');
-// const { userCreateSchema, userUpdateSchema } = require('../validators/userValidator');
-// const validate = require('../validate');
+const validate = require('../validate');
+const { userCreateSchema, userUpdateSchema } = require('../validators/userValidator');
 const router = express.Router();
 
-router.post(
-  '/user',
-  /* validate(userCreateSchema), */ async (req, res) => {
-    try {
-      const user = await UserService.createUser(req.body);
-      res.status(201).json(user);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
+router.post('/user', validate(userCreateSchema), async (req, res) => {
+  try {
+    const user = await UserService.createUser(req.body);
+    res.status(201).json(user);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-);
+});
+
+router.put('/user/:id', validate(userUpdateSchema), async (req, res) => {
+  try {
+    const updated = await UserService.updateUser(req.params.id, req.body);
+    if (!updated) return res.status(404).json({ error: 'User not found' });
+    res.status(200).json(updated);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 router.get('/users', async (req, res) => {
   try {
@@ -36,19 +44,6 @@ router.get('/user/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-router.put(
-  '/user/:id',
-  /* validate(userUpdateSchema), */ async (req, res) => {
-    try {
-      const updated = await UserService.updateUser(req.params.id, req.body);
-      if (!updated) return res.status(404).json({ error: 'User not found' });
-      res.status(200).json(updated);
-    } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  }
-);
 
 router.delete('/user/:id', async (req, res) => {
   try {
