@@ -4,9 +4,16 @@
     <form @submit.prevent="submit">
       <div class="grid gap-4">
         <input v-model="form.surname" placeholder="Фамилия" required class="input" />
+        <p class="error" v-if="errors.surname">{{ errors.surname }}</p>
+
         <input v-model="form.name" placeholder="Имя" required class="input" />
+        <p class="error" v-if="errors.name">{{ errors.name }}</p>
+
         <input v-model="form.middlename" placeholder="Отчество" class="input" />
+        <p class="error" v-if="errors.middlename">{{ errors.middlename }}</p>
+
         <input v-model="form.birth_date" type="date" required class="input" />
+        <p class="error" v-if="errors.birth_date">{{ errors.birth_date }}</p>
 
         <h3 class="font-semibold mt-4">Паспортные данные</h3>
         <div>
@@ -15,10 +22,11 @@
             placeholder="Серия"
             required
             class="input"
-            :class="{ invalid: form.passport.passport_series.length !== 4 }"
+            maxlength="4"
+            @input="form.passport.passport_series = form.passport.passport_series.replace(/\D/g, '').slice(0, 4)"
           />
-          <p v-if="form.passport.passport_series.length !== 4" class="error">
-            Серия должна содержать 4 цифры
+          <p class="error" v-if="errors['passport.passport_series']">
+            {{ errors['passport.passport_series'] }}
           </p>
         </div>
         <div>
@@ -27,10 +35,11 @@
             placeholder="Номер"
             required
             class="input"
-            :class="{ invalid: form.passport.passport_number.length !== 6 }"
+            maxlength="6"
+            @input="form.passport.passport_number = form.passport.passport_number.replace(/\D/g, '').slice(0, 6)"
           />
-          <p v-if="form.passport.passport_number.length !== 6" class="error">
-            Номер должен содержать 6 цифр
+          <p class="error" v-if="errors['passport.passport_series']">
+            {{ errors['passport.passport_series'] }}
           </p>
         </div>
         <input
@@ -40,31 +49,51 @@
           required
           class="input"
         />
+        <p class="error" v-if="errors['passport.data_of_issue']">
+          {{ errors['passport.data_of_issue'] }}
+        </p>
+
         <input
           v-model="form.passport.unit_code"
           placeholder="Код подразделения"
           required
           class="input"
         />
+        <p class="error" v-if="errors['passport.unit_code']">{{ errors['passport.unit_code'] }}</p>
+
         <input
           v-model="form.passport.issued_by_whom"
           placeholder="Кем выдано"
           required
           class="input"
         />
+        <p class="error" v-if="errors['passport.issued_by_whom']">
+          {{ errors['passport.issued_by_whom'] }}
+        </p>
 
         <h3 class="font-semibold mt-4">Адрес</h3>
         <input v-model="form.address.regin" placeholder="Регион" required class="input" />
+        <p class="error" v-if="errors['address.regin']">{{ errors['address.regin'] }}</p>
+
         <input
           v-model="form.address.localities"
           placeholder="Населённый пункт"
           required
           class="input"
         />
+        <p class="error" v-if="errors['address.localities']">{{ errors['address.localities'] }}</p>
+
         <input v-model="form.address.street" placeholder="Улица" required class="input" />
+        <p class="error" v-if="errors['address.street']">{{ errors['address.street'] }}</p>
+
         <input v-model="form.address.house" placeholder="Дом" required class="input" />
+        <p class="error" v-if="errors['address.house']">{{ errors['address.house'] }}</p>
+
         <input v-model="form.address.building" placeholder="Корпус" class="input" />
+        <p class="error" v-if="errors['address.building']">{{ errors['address.building'] }}</p>
+
         <input v-model="form.address.apartment" placeholder="Квартира" class="input" />
+        <p class="error" v-if="errors['address.apartment']">{{ errors['address.apartment'] }}</p>
       </div>
 
       <button type="submit" class="btn btn-primary mt-4">Сохранить</button>
@@ -73,16 +102,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getWorkerById, updateWorker } from '@/api/workersApi';
+
 
 const route = useRoute();
 const router = useRouter();
 
 const formatDate = (date) => date?.split('T')[0] || '';
 
-const form = ref({
+const form = reactive({
   surname: '',
   name: '',
   middlename: '',
@@ -104,57 +134,57 @@ const form = ref({
   },
 });
 
+const errors = reactive({});
+
 onMounted(async () => {
   try {
     const { data } = await getWorkerById(route.params.id);
+    form.surname = data.surname || '';
+    form.name = data.name || '';
+    form.middlename = data.middlename || '';
+    form.birth_date = formatDate(data.birth_date);
 
-    form.value = {
-      surname: data.surname || '',
-      name: data.name || '',
-      middlename: data.middlename || '',
-      birth_date: formatDate(data.birth_date),
+    form.passport.passport_series = data.passport_series || '';
+    form.passport.passport_number = data.passport_number || '';
+    form.passport.data_of_issue = formatDate(data.data_of_issue);
+    form.passport.unit_code = data.unit_code || '';
+    form.passport.issued_by_whom = data.issued_by_whom || '';
 
-      passport: {
-        passport_series: data.passport_series || '',
-        passport_number: data.passport_number || '',
-        data_of_issue: formatDate(data.data_of_issue),
-        unit_code: data.unit_code || '',
-        issued_by_whom: data.issued_by_whom || '',
-      },
-
-      address: {
-        regin: data.regin || '',
-        localities: data.localities || '',
-        street: data.street || '',
-        house: data.house || '',
-        building: data.building || '',
-        apartment: data.apartment || '',
-      },
-    };
+    form.address.regin = data.regin || '';
+    form.address.localities = data.localities || '';
+    form.address.street = data.street || '';
+    form.address.house = data.house || '';
+    form.address.building = data.building || '';
+    form.address.apartment = data.apartment || '';
   } catch (err) {
     console.error('Ошибка при загрузке данных работника:', err);
   }
 });
 
-
-
 const submit = async () => {
-  if (
-    form.value.passport.passport_series.length !== 4 ||
-    form.value.passport.passport_number.length !== 6
-  ) {
-    alert('Проверьте серию и номер паспорта');
-    return;
-  }
+  Object.keys(errors).forEach(key => delete errors[key]);
 
   try {
-    await updateWorker(route.params.id, form.value);
-    router.push('/workers');
+    await updateWorker(route.params.id, form);
+    await router.push('/workers');
   } catch (error) {
-    console.error('Ошибка при обновлении работника:', error);
+    const response = error.response;
+    if (response?.status === 400 && response.data.errors) {
+      const errData = response.data.errors;
+      if (Array.isArray(errData)) {
+        for (const err of errData) {
+          errors[err.field] = err.message;
+        }
+      } else if (typeof errData === 'object') {
+        Object.assign(errors, errData);
+      }
+    } else {
+      console.error('Ошибка при обновлении работника:', error);
+    }
   }
 };
 </script>
+
 
 <style scoped>
 .container {

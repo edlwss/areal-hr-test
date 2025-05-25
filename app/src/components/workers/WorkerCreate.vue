@@ -4,16 +4,16 @@
     <form @submit.prevent="submit">
       <div class="grid gap-4">
         <input v-model="form.surname" placeholder="Фамилия" required class="input" />
-        <!--        <p class="error" v-if="errors.surname">{{ errors.surname }}</p>-->
+                <p class="error" v-if="errors.surname">{{ errors.surname }}</p>
 
         <input v-model="form.name" placeholder="Имя" required class="input" />
-        <!--        <p class="error" v-if="errors.name">{{ errors.name }}</p>-->
+                <p class="error" v-if="errors.name">{{ errors.name }}</p>
 
         <input v-model="form.middlename" placeholder="Отчество" class="input" />
-        <!--        <p class="error" v-if="errors.middlename">{{ errors.middlename }}</p>-->
+                <p class="error" v-if="errors.middlename">{{ errors.middlename }}</p>
 
         <input v-model="form.birth_date" type="date" required class="input" />
-        <!--        <p class="error" v-if="errors.birth_date">{{ errors.birth_date }}</p>-->
+                <p class="error" v-if="errors.birth_date">{{ errors.birth_date }}</p>
 
         <h3 class="font-semibold mt-4">Паспортные данные</h3>
         <div>
@@ -22,6 +22,8 @@
             placeholder="Серия"
             required
             class="input"
+            maxlength="4"
+            @input="form.passport.passport_series = form.passport.passport_series.replace(/\D/g, '').slice(0, 4)"
           />
           <p class="error" v-if="errors['passport.passport_series']">
             {{ errors['passport.passport_series'] }}
@@ -33,6 +35,8 @@
             placeholder="Номер"
             required
             class="input"
+            maxlength="6"
+            @input="form.passport.passport_number = form.passport.passport_number.replace(/\D/g, '').slice(0, 6)"
           />
           <p class="error" v-if="errors['passport.passport_number']">
             {{ errors['passport.passport_number'] }}
@@ -98,7 +102,7 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, ref } from 'vue';
 import { createWorker } from '@/api/workersApi';
 import { useRouter } from 'vue-router';
 
@@ -129,35 +133,29 @@ const form = reactive({
 const errors = reactive({});
 
 const submit = async () => {
-  Object.keys(errors).forEach((key) => delete errors[key]); // очистка ошибок
+  Object.keys(errors).forEach(key => delete errors[key]);
 
   try {
     await createWorker(form);
     await router.push('/workers');
   } catch (error) {
-    console.error('Ошибка при создании работника:', error);
-    if (error.response && error.response.data && error.response.data.errors) {
-      const flatErrors = flattenErrors(error.response.data.errors);
-      Object.assign(errors, flatErrors);
-    } else {
-      alert('Произошла ошибка при создании работника');
-    }
-  }
-  function flattenErrors(obj, prefix = '') {
-    const res = {};
-    for (const key in obj) {
-      const value = obj[key];
-      const path = prefix ? `${prefix}.${key}` : key;
-      if (typeof value === 'object' && !Array.isArray(value)) {
-        Object.assign(res, flattenErrors(value, path));
-      } else {
-        res[path] = value;
+    const response = error.response;
+    if (response?.status === 400 && response.data.errors) {
+      const errData = response.data.errors;
+      if (Array.isArray(errData)) {
+        for (const err of errData) {
+          errors[err.field] = err.message;
+        }
+      } else if (typeof errData === 'object') {
+        Object.assign(errors, errData);
       }
+    } else {
+      console.error('Ошибка создания работника:', error);
     }
-    return res;
   }
 };
 </script>
+
 
 <style scoped>
 .container {

@@ -7,7 +7,7 @@ module.exports = function validate(schema) {
     }
 
     const formattedErrors = error.details.map((err) => ({
-      field: err.context.key,
+      field: err.path.join('.'),
       message: err.message,
     }));
 

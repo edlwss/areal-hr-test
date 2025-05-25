@@ -19,6 +19,7 @@ const passportSchema = Joi.object({
 
   data_of_issue: Joi.date().iso().required().messages({
     'date.base': 'Дата выдачи должна быть датой',
+    'date.format': 'Дата выдачи должна быть в формате ISO (YYYY-MM-DD)',
     'any.required': 'Дата выдачи обязательна',
   }),
 
@@ -61,12 +62,13 @@ const createWorkerSchema = Joi.object({
   }),
   name: Joi.string().max(100).required().messages({
     'string.empty': 'Имя обязательно',
-    'string.max': 'Имя не должно превышать 100 символов',
+    'string.max': 'Имя не должна превышать 100 символов',
   }),
   middlename: Joi.string().max(100).optional(),
 
-  birth_date: Joi.date().min('1900-01-01').max(new Date()).required().messages({
+  birth_date: Joi.date().iso().min('1900-01-01').max(new Date()).required().messages({
     'date.base': 'Дата рождения должна быть корректной датой',
+    'date.format': 'Дата рождения должна быть в формате ISO (YYYY-MM-DD)',
     'date.min': 'Дата рождения не может быть раньше 1900 года',
     'date.max': 'Дата рождения не может быть в будущем',
     'any.required': 'Дата рождения обязательна',
@@ -81,12 +83,13 @@ const updateWorkerSchema = Joi.object({
     'string.max': 'Фамилия не должна превышать 100 символов',
   }),
   name: Joi.string().max(100).messages({
-    'string.max': 'Имя не должно превышать 100 символов',
+    'string.max': 'Имя не должна превышать 100 символов',
   }),
   middlename: Joi.string().max(100),
 
-  birth_date: Joi.date().min('1900-01-01').max(new Date()).messages({
+  birth_date: Joi.date().iso().min('1900-01-01').max(new Date()).messages({
     'date.base': 'Дата рождения должна быть корректной датой',
+    'date.format': 'Дата рождения должна быть в формате ISO (YYYY-MM-DD)',
     'date.min': 'Дата рождения не может быть раньше 1900 года',
     'date.max': 'Дата рождения не может быть в будущем',
   }),
